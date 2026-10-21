@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K&P Saúde Animal — Visão Geral</title>
+    <style>
+        :root {
+            --kp-green-primary: #059669;
+            --kp-green-accent: #10B981;
+            --kp-green-light: #ECFDF5;
+            --kp-green-dark: #065F46;
+            --kp-yellow: #F59E0B;
+            --kp-yellow-light: #FEF3C7;
+            --kp-yellow-dark: #B45309;
+            --kp-blue: #0284C7;
+            --kp-blue-light: #E0F2FE;
+            --kp-red: #EF4444;
+            --kp-red-light: #FEE2E2;
+            --kp-bg: #F8FAFC;
+            --kp-surface: #FFFFFF;
+            --kp-text: #0F172A;
+            --kp-text-muted: #64748B;
+            --kp-border: #E2E8F0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--kp-bg);
+            color: var(--kp-text);
+            min-height: 100vh;
+            padding-bottom: 90px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+
+        /* Top Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .system-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--kp-green-primary);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .system-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--kp-green-accent);
+            border-radius: 50%;
+        }
+
+        h1.greeting {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--kp-text);
+            margin-top: 4px;
+        }
+
+        p.sub-greeting {
+            color: var(--kp-text-muted);
+            font-size: 14px;
+        }
+
+        .btn-logout {
+            background: var(--kp-surface);
+            border: 1px solid var(--kp-border);
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--kp-text-muted);
+            cursor: pointer;
+        }
+
+        /* Resumo Rápido */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .summary-card {
+            background: var(--kp-surface);
+            border: 1px solid var(--kp-border);
+            border-radius: 16px;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .summary-card .icon {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .summary-card .value {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--kp-text);
+        }
+
+        .summary-card .label {
+            font-size: 11px;
+            color: var(--kp-text-muted);
+        }
+
+        /* Seção Pets */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .badge-live {
+            background: var(--kp-green-light);
+            color: var(--kp-green-primary);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 8px;
+        }
+
+        /* Card do Pet */
+        .pet-card {
+            background: var(--kp-surface);
+            border: 1px solid var(--kp-border);
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);
+            transition: transform 0.15s;
+        }
+
+        .pet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .pet-info-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pet-avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--kp-green-light), var(--kp-blue-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .pet-name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pet-name {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .pet-breed {
+            font-size: 12px;
+            color: var(--kp-text-muted);
+        }
+
+        .badge-status {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-ok { background: var(--kp-green-light); color: var(--kp-green-dark); border: 1px solid #A7F3D0; }
+        .status-atencao { background: var(--kp-yellow-light); color: var(--kp-yellow-dark); border: 1px solid #FDE68A; }
+        .status-alerta { background: var(--kp-red-light); color: #B91C1C; border: 1px solid #FCA5A5; }
+
+        .battery-indicator {
+            font-size: 12px;
+            color: var(--kp-text-muted);
+            font-weight: 600;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--kp-border);
+            margin: 12px 0;
+        }
+
+        /* 📐 Estrutura de dados vitais */
+        .vital-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .vital-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--kp-text-muted);
+        }
+
+        .vital-value {
+            font-weight: 700;
+            color: var(--kp-text);
+        }
+
+        .location-box {
+            background: var(--kp-bg);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .location-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--kp-green-accent);
+        }
+
+        /* Atalho Sayori */
+        .sayori-banner {
+            background: var(--kp-green-light);
+            border: 1px solid #A7F3D0;
+            border-radius: 18px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+            margin-top: 10px;
+        }
+
+        .sayori-avatar {
+            font-size: 32px;
+        }
+
+        .sayori-text h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--kp-green-dark);
+        }
+
+        .sayori-text p {
+            font-size: 12px;
+            color: var(--kp-green-dark);
+            opacity: 0.85;
+        }
+
+        /* Navegação Inferior */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--kp-surface);
+            border-top: 1px solid var(--kp-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--kp-text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            gap: 4px;
+        }
+
+        .nav-item.active {
+            color: var(--kp-green-primary);
+        }
+
+        .nav-icon {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="top-header">
+        <div>
+            <div class="system-badge">
+                <span class="dot"></span>
+                <span>SISTEMA VITAL K&P</span>
+            </div>
+            <h1 class="greeting" id="userGreeting">Olá, Amanda! 👋</h1>
+            <p class="sub-greeting">Seus pets estão protegidos hoje</p>
+        </div>
+        <button class="btn-logout" onclick="logout()">Sair</button>
+    </div>
+
+    <!-- Resumo Rápido -->
+    <div class="summary-grid">
+        <div class="summary-card">
+            <div class="icon">🐾</div>
+            <div class="value">3</div>
+            <div class="label">Pets ativos</div>
+        </div>
+        <div class="summary-card">
+            <div class="icon">📡</div>
+            <div class="value">1.428</div>
+            <div class="label">Leituras hoje</div>
+        </div>
+        <div class="summary-card">
+            <div class="icon">🔔</div>
+            <div class="value" style="color: var(--kp-yellow);">1 atenção</div>
+            <div class="label">Alertas ativos</div>
+        </div>
+    </div>
+
+    <!-- Seção de Pets -->
+    <div class="section-header">
+        <span class="section-title">Meus Pets Monitorados</span>
+        <span class="badge-live">Coleira K&P Conectada</span>
+    </div>
+
+    <!-- Lista de Cards -->
+    <div id="petsList">
+        <!-- Card 1: Thor -->
+        <div class="pet-card">
+            <div class="pet-header">
+                <div class="pet-info-box">
+                    <div class="pet-avatar">🐕</div>
+                    <div>
+                        <div class="pet-name-row">
+                            <span class="pet-name">Thor</span>
+                            <span class="badge-status status-atencao">🟡 Atenção</span>
+                        </div>
+                        <span class="pet-breed">Golden Retriever • 3 anos</span>
+                    </div>
+                </div>
+                <div class="battery-indicator">🔋 88%</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="vital-row">
+                <span class="vital-label">💓 Batimento:</span>
+                <span class="vital-value">72 BPM <span class="badge-status status-ok" style="font-size: 10px;">🟢 Normal</span></span>
+            </div>
+            <div class="vital-row">
+                <span class="vital-label">🫁 Oxigenação:</span>
+                <span class="vital-value">98% <span class="badge-status status-ok" style="font-size: 10px;">🟢 Normal</span></span>
+            </div>
+            <div class="vital-row">
+                <span class="vital-label">🌡️ Temperatura:</span>
+                <span class="vital-value" style="color: var(--kp-yellow-dark);">38.2°C <span class="badge-status status-atencao" style="font-size: 10px;">💛 Atenção</span></span>
+            </div>
+
+            <div class="location-box">
+                <span class="location-dot"></span>
+                <span><strong>📍 Localização:</strong> Dentro da área segura — 10:45</span>
+            </div>
+        </div>
+
+        <!-- Card 2: Luna -->
+        <div class="pet-card">
+            <div class="pet-header">
+                <div class="pet-info-box">
+                    <div class="pet-avatar">🐱</div>
+                    <div>
+                        <div class="pet-name-row">
+                            <span class="pet-name">Luna</span>
+                            <span class="badge-status status-ok">🟢 Ok</span>
+                        </div>
+                        <span class="pet-breed">Siamês • 2 anos</span>
+                    </div>
+                </div>
+                <div class="battery-indicator">🔋 94%</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="vital-row">
+                <span class="vital-label">💓 Batimento:</span>
+                <span class="vital-value">110 BPM <span class="badge-status status-ok" style="font-size: 10px;">🟢 Normal</span></span>
+            </div>
+            <div class="vital-row">
+                <span class="vital-label">🫁 Oxigenação:</span>
+                <span class="vital-value">99% <span class="badge-status status-ok" style="font-size: 10px;">🟢 Normal</span></span>
+            </div>
+            <div class="vital-row">
+                <span class="vital-label">🌡️ Temperatura:</span>
+                <span class="vital-value">38.4°C <span class="badge-status status-ok" style="font-size: 10px;">🟢 Normal</span></span>
+            </div>
+
+            <div class="location-box">
+                <span class="location-dot"></span>
+                <span><strong>📍 Localização:</strong> Dentro da área segura — 10:52</span>
+            </div>
+        </div>
+
+        <!-- Card 3: Mel -->
+        <div class="pet-card">
+            <div class="pet-header">
+                <div class="pet-info-box">
+                    <div class="pet-avatar">🐶</div>
+                    <div>
+                        <div class="pet-name-row">
+                            <span class="pet-name">Mel</span>
+                            <span class="badge-status status-ok">🟢 Ok</span>
+                        </div>
+                        <span class="pet-breed">Spitz Alemão • 4 anos</span>
+                    </div>
+                </div>
+                <div class="battery-indicator">🔋 64%</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="vital-row">
+                <span class="vital-label">💓 Batimento:</span>
+                <span class="vital-value">92 BPM <span class="badge-status status-ok" style="font-size: 10px;">🟢 Normal</span></span>
+            </div>
+            <div class="vital-row">
+                <span class="vital-label">🫁 Oxigenação:</span>
+                <span class="vital-value">98% <span class="badge-status status-ok" style="font-size: 10px;">🟢 Normal</span></span>
+            </div>
+            <div class="vital-row">
+                <span class="vital-label">🌡️ Temperatura:</span>
+                <span class="vital-value">38.1°C <span class="badge-status status-ok" style="font-size: 10px;">🟢 Normal</span></span>
+            </div>
+
+            <div class="location-box">
+                <span class="location-dot"></span>
+                <span><strong>📍 Localização:</strong> Dentro da área segura — 10:48</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Banner Sayori -->
+    <a href="diagnosticos.html" class="sayori-banner">
+        <div class="sayori-avatar">👩‍⚕️</div>
+        <div class="sayori-text">
+            <h4>Dúvidas sobre a saúde dos seus pets?</h4>
+            <p>Converse com a Sayori, assistente veterinária IA em tempo real.</p>
+        </div>
+    </a>
+</div>
+
+<!-- Navegação Inferior -->
+<nav class="bottom-nav">
+    <a href="principal.html" class="nav-item active">
+        <span class="nav-icon">🏠</span>
+        <span>Início</span>
+    </a>
+    <a href="#" class="nav-item" onclick="alert('Abra o app Android ou aba correspondente para gráficos interativos!')">
+        <span class="nav-icon">📊</span>
+        <span>Gráficos</span>
+    </a>
+    <a href="#" class="nav-item" onclick="alert('Acesse a cerca virtual no app Android!')">
+        <span class="nav-icon">🗺️</span>
+        <span>Mapa</span>
+    </a>
+    <a href="diagnosticos.html" class="nav-item">
+        <span class="nav-icon">💚</span>
+        <span>Sayori</span>
+    </a>
+    <a href="#" class="nav-item" onclick="alert('Perfil do tutor Amanda Silva - K&P Vitalidade Pro')">
+        <span class="nav-icon">👤</span>
+        <span>Perfil</span>
+    </a>
+</nav>
+
+<script>
+    // Recupera usuário logado
+    const userJson = localStorage.getItem('kp_usuario');
+    if (userJson) {
+        try {
+            const user = JSON.parse(userJson);
+            if (user.nome) {
+                document.getElementById('userGreeting').innerText = `Olá, ${user.nome}! 👋`;
+            }
+        } catch(e) {}
+    }
+
+    function logout() {
+        localStorage.removeItem('kp_token');
+        localStorage.removeItem('kp_usuario');
+        window.location.href = 'index.html';
+    }
+</script>
+
+</body>
+</html>
