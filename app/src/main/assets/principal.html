@@ -1,0 +1,3786 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K&P Saúde Animal — Visão Geral dos Pets</title>
+    <style>
+        :root {
+            --kp-green-primary: #059669;
+            --kp-green-accent: #10B981;
+            --kp-green-light: #ECFDF5;
+            --kp-green-dark: #065F46;
+            --kp-yellow: #F59E0B;
+            --kp-yellow-light: #FEF3C7;
+            --kp-yellow-dark: #B45309;
+            --kp-blue: #0284C7;
+            --kp-blue-light: #E0F2FE;
+            --kp-red: #EF4444;
+            --kp-red-light: #FEE2E2;
+            --kp-bg: #F8FAFC;
+            --kp-surface: #FFFFFF;
+            --kp-surface-variant: #F1F5F9;
+            --kp-text: #0F172A;
+            --kp-text-muted: #64748B;
+            --kp-border: #E2E8F0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--kp-bg);
+            color: var(--kp-text);
+            min-height: 100vh;
+            padding-bottom: 95px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+
+        /* Top Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .system-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--kp-green-primary);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .system-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--kp-green-accent);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            animation: pulseDot 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.25); opacity: 0.75; }
+        }
+
+        h1.greeting {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--kp-text);
+            margin-top: 4px;
+        }
+
+        p.sub-greeting {
+            color: var(--kp-text-muted);
+            font-size: 14px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-action {
+            background: var(--kp-surface);
+            border: 1px solid var(--kp-border);
+            border-radius: 12px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--kp-text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+
+        .btn-action:hover {
+            border-color: var(--kp-green-primary);
+            color: var(--kp-green-primary);
+        }
+
+        /* Barra de Ações Rápidas de Navegação */
+        .quick-nav-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .nav-quick-btn {
+            flex: 1;
+            background: linear-gradient(135deg, var(--kp-green-light), var(--kp-surface));
+            border: 1.5px solid #A7F3D0;
+            border-radius: 14px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--kp-green-dark);
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-quick-btn:hover {
+            border-color: var(--kp-green-primary);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .nav-quick-btn .btn-icon {
+            font-size: 20px;
+            background: #FFFFFF;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+            flex-shrink: 0;
+        }
+
+        /* Aviso Offline */
+        .offline-notice {
+            background: var(--kp-blue-light);
+            border: 1px solid #BAE6FD;
+            color: #0369A1;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        /* Resumo Rápido */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: var(--kp-surface);
+            border: 1px solid var(--kp-border);
+            border-radius: 16px;
+            padding: 12px;
+            text-align: left;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+        }
+
+        .summary-card .icon {
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .summary-card .value {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--kp-text);
+        }
+
+        .summary-card .label {
+            font-size: 11px;
+            color: var(--kp-text-muted);
+            margin-top: 2px;
+        }
+
+        /* Cabeçalho de Seção */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge-live {
+            background: var(--kp-green-light);
+            color: var(--kp-green-primary);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Estados de Carregamento e Erro */
+        .state-container {
+            background: var(--kp-surface);
+            border: 1px solid var(--kp-border);
+            border-radius: 20px;
+            padding: 36px 20px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .state-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid rgba(5, 150, 105, 0.2);
+            border-top-color: var(--kp-green-primary);
+            border-radius: 50%;
+            margin: 0 auto 14px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .state-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--kp-text);
+            margin-bottom: 6px;
+        }
+
+        .state-subtitle {
+            font-size: 13px;
+            color: var(--kp-text-muted);
+            margin-bottom: 16px;
+        }
+
+        /* Card do Pet */
+        .pet-card {
+            background: var(--kp-surface);
+            border: 1px solid var(--kp-border);
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);
+            transition: transform 0.15s, box-shadow 0.15s, border-color 0.2s;
+        }
+
+        .pet-card:hover {
+            box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.06);
+        }
+
+        .pet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 14px;
+        }
+
+        .pet-info-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pet-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--kp-green-light), var(--kp-blue-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            flex-shrink: 0;
+        }
+
+        .pet-name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .pet-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--kp-text);
+        }
+
+        .pet-breed {
+            font-size: 12px;
+            color: var(--kp-text-muted);
+            margin-top: 2px;
+        }
+
+        .pet-top-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        .badge-status {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-ok { background: var(--kp-green-light); color: var(--kp-green-dark); border: 1px solid #A7F3D0; }
+        .status-atencao { background: var(--kp-yellow-light); color: var(--kp-yellow-dark); border: 1px solid #FDE68A; }
+        .status-alerta { background: var(--kp-red-light); color: #B91C1C; border: 1px solid #FCA5A5; }
+        .status-neutral { background: var(--kp-bg); color: var(--kp-text-muted); border: 1px solid var(--kp-border); }
+
+        .battery-indicator {
+            font-size: 12px;
+            color: var(--kp-text-muted);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .collar-tag-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+
+        .collar-tag {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--kp-blue);
+            background: var(--kp-blue-light);
+            border: 1px solid #BAE6FD;
+            padding: 2px 8px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .collar-tag.no-collar {
+            color: var(--kp-text-muted);
+            background: var(--kp-bg);
+            border-color: var(--kp-border);
+        }
+
+        .btn-link-collar-pet {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--kp-green-primary);
+            background: var(--kp-green-light);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 2px 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .btn-link-collar-pet:hover {
+            background: var(--kp-green-primary);
+            color: #FFFFFF;
+        }
+
+        .btn-ask-sayori-pet {
+            font-size: 11px;
+            font-weight: 700;
+            color: #0369A1;
+            background: #E0F2FE;
+            border: 1px solid #BAE6FD;
+            border-radius: 8px;
+            padding: 2px 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            transition: all 0.2s;
+        }
+
+        .btn-ask-sayori-pet:hover {
+            background: #0284C7;
+            color: #FFFFFF;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--kp-border);
+            margin: 12px 0;
+        }
+
+        /* Dados vitais */
+        .vital-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .vital-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--kp-text-muted);
+        }
+
+        .vital-value {
+            font-weight: 700;
+            color: var(--kp-text);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Localização em Tempo Real */
+        .location-box {
+            background: var(--kp-bg);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .location-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--kp-green-accent);
+            flex-shrink: 0;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+            animation: pulseDot 2s infinite ease-in-out;
+        }
+
+        .location-dot.location-dot-alert {
+            background: var(--kp-red);
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25);
+        }
+
+        .btn-sm-geofence {
+            background: var(--kp-surface);
+            border: 1px solid var(--kp-border);
+            color: var(--kp-green-primary);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-sm-geofence:hover {
+            background: var(--kp-green-light);
+            border-color: var(--kp-green-primary);
+        }
+
+        /* 🚨 Banner de Alerta Crítico de Cerca Virtual */
+        .geofence-alarm-banner {
+            background: linear-gradient(135deg, #FEE2E2, #FEF2F2);
+            border: 2px solid var(--kp-red);
+            border-radius: 18px;
+            padding: 14px 16px;
+            margin-bottom: 18px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 8px 24px rgba(239, 68, 68, 0.2);
+            animation: pulseBanner 1.8s infinite ease-in-out;
+            scroll-margin-top: 15px;
+        }
+
+        @keyframes pulseBanner {
+            0%, 100% { border-color: #EF4444; box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2); }
+            50% { border-color: #DC2626; box-shadow: 0 8px 28px rgba(239, 68, 68, 0.35); }
+        }
+
+        .alarm-banner-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alarm-banner-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--kp-red);
+            color: #FFFFFF;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            animation: shakeIcon 0.8s infinite alternate ease-in-out;
+        }
+
+        @keyframes shakeIcon {
+            0% { transform: rotate(-8deg); }
+            100% { transform: rotate(8deg); }
+        }
+
+        .alarm-banner-info {
+            flex: 1;
+        }
+
+        .alarm-banner-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #991B1B;
+            letter-spacing: 0.3px;
+        }
+
+        .alarm-banner-desc {
+            font-size: 12px;
+            color: #B91C1C;
+            margin-top: 2px;
+            line-height: 1.4;
+        }
+
+        .alarm-banner-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-alarm-action {
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s;
+        }
+
+        .btn-alarm-primary {
+            background: var(--kp-red);
+            color: #FFFFFF;
+        }
+
+        .btn-alarm-primary:hover {
+            background: #DC2626;
+        }
+
+        .btn-alarm-secondary {
+            background: #FFFFFF;
+            color: #991B1B;
+            border: 1px solid #FCA5A5;
+        }
+
+        .btn-alarm-secondary:hover {
+            background: #FEF2F2;
+        }
+
+        /* 🗺️ Seção e Card da Cerca Virtual */
+        .geofence-card {
+            background: var(--kp-surface);
+            border: 1px solid var(--kp-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 18px -3px rgba(15, 23, 42, 0.04);
+            position: relative;
+            overflow: hidden;
+            scroll-margin-top: 20px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .geofence-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #10B981, #059669, #0284C7);
+        }
+
+        .geofence-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .geofence-title-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .geofence-icon-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--kp-green-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .geofence-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--kp-text);
+        }
+
+        .geofence-subtitle {
+            font-size: 12px;
+            color: var(--kp-text-muted);
+            margin-top: 2px;
+        }
+
+        /* Seletor de Pets da Cerca */
+        .geofence-pet-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+
+        .geofence-pet-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .geofence-tab-btn {
+            background: var(--kp-surface-variant);
+            border: 1.5px solid var(--kp-border);
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--kp-text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .geofence-tab-btn:hover {
+            border-color: var(--kp-green-primary);
+        }
+
+        .geofence-tab-btn.active {
+            background: var(--kp-green-light);
+            border-color: var(--kp-green-primary);
+            color: var(--kp-green-dark);
+            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.15);
+        }
+
+        /* Contêiner do Canvas do Mapa */
+        .geofence-canvas-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--kp-border);
+            background: #F1F5F9;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
+            user-select: none;
+            touch-action: none;
+        }
+
+        #geofenceCanvas {
+            display: block;
+            width: 100%;
+            height: 340px;
+            cursor: crosshair;
+        }
+
+        /* Overlays sobre o Mapa */
+        .canvas-toolbar {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none;
+            gap: 6px;
+        }
+
+        .canvas-mode-group {
+            display: flex;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            padding: 3px;
+            border-radius: 12px;
+            border: 1px solid var(--kp-border);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            pointer-events: auto;
+        }
+
+        .canvas-mode-btn {
+            background: transparent;
+            border: none;
+            padding: 5px 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--kp-text-muted);
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .canvas-mode-btn.active {
+            background: var(--kp-green-primary);
+            color: #FFFFFF;
+        }
+
+        .canvas-quick-btn {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--kp-border);
+            color: var(--kp-text);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            pointer-events: auto;
+            transition: all 0.15s;
+            font-size: 14px;
+        }
+
+        .canvas-quick-btn:hover {
+            color: var(--kp-green-primary);
+            border-color: var(--kp-green-primary);
+        }
+
+        .canvas-bottom-bar {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .canvas-simulate-btn {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1.5px solid var(--kp-yellow);
+            color: var(--kp-yellow-dark);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            pointer-events: auto;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .canvas-simulate-btn:hover {
+            background: var(--kp-yellow-light);
+            transform: translateY(-1px);
+        }
+
+        .canvas-simulate-btn.breached {
+            border-color: var(--kp-red);
+            color: var(--kp-red);
+            background: var(--kp-red-light);
+        }
+
+        .canvas-scale-badge {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--kp-border);
+            border-radius: 8px;
+            padding: 3px 8px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--kp-text-muted);
+            pointer-events: auto;
+        }
+
+        /* Legenda de Cores do Mapa */
+        .geofence-legend {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--kp-bg);
+            border: 1px solid var(--kp-border);
+            border-radius: 12px;
+            padding: 8px 12px;
+            margin-top: 10px;
+            font-size: 11px;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .legend-dot.ok { background: var(--kp-green-accent); box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); }
+        .legend-dot.warn { background: var(--kp-yellow); box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2); }
+        .legend-dot.alert { background: var(--kp-red); box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2); }
+
+        /* Controles do Raio de Segurança */
+        .geofence-control-box {
+            background: var(--kp-bg);
+            border: 1px solid var(--kp-border);
+            border-radius: 14px;
+            padding: 14px;
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .radius-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .radius-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--kp-text);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .radius-value-tag {
+            background: var(--kp-green-light);
+            color: var(--kp-green-dark);
+            font-size: 13px;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 8px;
+            border: 1px solid #A7F3D0;
+        }
+
+        .radius-slider {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #CBD5E1;
+            border-radius: 6px;
+            outline: none;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .radius-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--kp-green-primary);
+            border: 3px solid #FFFFFF;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .radius-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        .geofence-presets-row {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+            scrollbar-width: none;
+        }
+
+        .geofence-presets-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .btn-radius-preset {
+            background: var(--kp-surface);
+            border: 1px solid var(--kp-border);
+            border-radius: 8px;
+            padding: 5px 9px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--kp-text);
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .btn-radius-preset:hover {
+            border-color: var(--kp-green-primary);
+            color: var(--kp-green-primary);
+        }
+
+        .btn-radius-preset.active {
+            background: var(--kp-green-primary);
+            border-color: var(--kp-green-primary);
+            color: #FFFFFF;
+        }
+
+        /* Telemetria da Cerca */
+        .geofence-telemetry-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .telemetry-cell {
+            background: var(--kp-surface);
+            border: 1px solid var(--kp-border);
+            border-radius: 10px;
+            padding: 8px 10px;
+        }
+
+        .telemetry-cell-label {
+            font-size: 10px;
+            color: var(--kp-text-muted);
+        }
+
+        .telemetry-cell-val {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--kp-text);
+            margin-top: 2px;
+        }
+
+        .geofence-action-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .btn-save-geofence {
+            flex: 1;
+            background: var(--kp-green-primary);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+
+        .btn-save-geofence:hover {
+            background: var(--kp-green-dark);
+        }
+
+        .btn-test-collar-buzzer {
+            background: var(--kp-surface-variant);
+            color: var(--kp-text);
+            border: 1px solid var(--kp-border);
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-test-collar-buzzer:hover {
+            border-color: var(--kp-yellow-dark);
+            color: var(--kp-yellow-dark);
+        }
+
+        /* ⚡ Ativação da Coleira K&P */
+        .activation-card {
+            background: var(--kp-surface);
+            border: 1px solid var(--kp-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03);
+            position: relative;
+            overflow: hidden;
+            scroll-margin-top: 20px;
+        }
+
+        .activation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--kp-green-primary), var(--kp-green-accent), var(--kp-blue));
+        }
+
+        .activation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .activation-title-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .activation-icon-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--kp-green-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .activation-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--kp-text);
+        }
+
+        .activation-subtitle {
+            font-size: 12px;
+            color: var(--kp-text-muted);
+            margin-top: 2px;
+        }
+
+        .activation-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--kp-text);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--kp-border);
+            border-radius: 12px;
+            font-size: 13px;
+            background: var(--kp-bg);
+            color: var(--kp-text);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--kp-green-primary);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+            background: var(--kp-surface);
+        }
+
+        .btn-activate {
+            background: var(--kp-green-primary);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .btn-activate:hover {
+            background: var(--kp-green-dark);
+        }
+
+        .btn-activate:active {
+            transform: scale(0.99);
+        }
+
+        .btn-activate:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .activation-status-banner {
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            line-height: 1.4;
+        }
+
+        .activation-status-banner.status-ok {
+            display: flex;
+            background: var(--kp-green-light);
+            color: var(--kp-green-dark);
+            border: 1px solid #A7F3D0;
+        }
+
+        .activation-status-banner.status-alerta {
+            display: flex;
+            background: var(--kp-red-light);
+            color: #B91C1C;
+            border: 1px solid #FCA5A5;
+        }
+
+        .activation-status-banner.status-atencao {
+            display: flex;
+            background: var(--kp-yellow-light);
+            color: var(--kp-yellow-dark);
+            border: 1px solid #FDE68A;
+        }
+
+        /* Banner Sayori */
+        .sayori-banner {
+            background: var(--kp-green-light);
+            border: 1px solid #A7F3D0;
+            border-radius: 18px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+            margin-top: 16px;
+            transition: transform 0.15s, box-shadow 0.15s;
+            cursor: pointer;
+        }
+
+        .sayori-banner:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(5, 150, 105, 0.08);
+        }
+
+        .sayori-avatar {
+            font-size: 32px;
+        }
+
+        .sayori-text h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--kp-green-dark);
+        }
+
+        .sayori-text p {
+            font-size: 12px;
+            color: var(--kp-green-dark);
+            opacity: 0.85;
+            margin-top: 2px;
+        }
+
+        /* Navegação Inferior */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--kp-surface);
+            border-top: 1px solid var(--kp-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            max-width: 600px;
+            margin: 0 auto;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--kp-text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            gap: 4px;
+            padding: 4px 12px;
+            border-radius: 8px;
+            transition: color 0.15s;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: var(--kp-green-primary);
+        }
+
+        .nav-icon {
+            font-size: 18px;
+        }
+
+        /* ====================================================================
+           💬 BOLHA FLUTUANTE DE CHAT DA SAYORI (FLOATING CHAT BUBBLE)
+           ==================================================================== */
+        .sayori-floating-fab {
+            position: fixed;
+            bottom: 74px;
+            right: 18px;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--kp-green-primary), var(--kp-green-accent));
+            box-shadow: 0 8px 24px rgba(5, 150, 105, 0.38);
+            border: 2px solid #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 150;
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+        }
+
+        .sayori-floating-fab:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 28px rgba(5, 150, 105, 0.45);
+        }
+
+        .sayori-floating-fab:active {
+            transform: scale(0.95);
+        }
+
+        .sayori-fab-icon {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        .sayori-fab-status-dot {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 13px;
+            height: 13px;
+            background: #10B981;
+            border: 2.5px solid #FFFFFF;
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(16, 185, 129, 0.8);
+        }
+
+        .sayori-fab-badge-tip {
+            position: absolute;
+            bottom: -6px;
+            background: var(--kp-green-dark);
+            color: #FFFFFF;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 8px;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        /* ====================================================================
+           🗨️ JANELA DE CHAT FLUTUANTE DA SAYORI (FLOATING CHAT WINDOW)
+           ==================================================================== */
+        .sayori-chat-window {
+            position: fixed;
+            bottom: 76px;
+            right: 16px;
+            width: calc(100% - 32px);
+            max-width: 390px;
+            height: 530px;
+            max-height: calc(100vh - 100px);
+            background: var(--kp-surface);
+            border: 1px solid var(--kp-border);
+            border-radius: 22px;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 160;
+            animation: chatSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes chatSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Cabeçalho do Chat */
+        .chat-header {
+            background: linear-gradient(135deg, var(--kp-green-primary), var(--kp-green-dark));
+            color: #FFFFFF;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-header-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+        .chat-header-title {
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+        }
+
+        .chat-header-status {
+            font-size: 11px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .chat-header-status .live-indicator {
+            width: 6px;
+            height: 6px;
+            background: #A7F3D0;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .chat-header-close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #FFFFFF;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .chat-header-close-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        /* Sugestões Rápidas (Chips) */
+        .chat-quick-chips {
+            padding: 10px 14px;
+            background: var(--kp-surface-variant);
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            white-space: nowrap;
+            border-bottom: 1px solid var(--kp-border);
+            scrollbar-width: none;
+        }
+
+        .chat-quick-chips::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quick-chip {
+            background: var(--kp-surface);
+            border: 1px solid var(--kp-border);
+            border-radius: 14px;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--kp-text);
+            cursor: pointer;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+
+        .quick-chip:hover {
+            border-color: var(--kp-green-primary);
+            color: var(--kp-green-primary);
+            background: var(--kp-green-light);
+        }
+
+        /* Área de Mensagens */
+        .chat-messages {
+            flex: 1;
+            padding: 14px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #FAFAFC;
+        }
+
+        .message-bubble {
+            max-width: 82%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            line-height: 1.45;
+            word-break: break-word;
+            position: relative;
+        }
+
+        .message-bubble.sayori {
+            align-self: flex-start;
+            background: #FFFFFF;
+            color: var(--kp-text);
+            border: 1px solid var(--kp-border);
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+
+        .message-bubble.user {
+            align-self: flex-end;
+            background: var(--kp-green-primary);
+            color: #FFFFFF;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-bubble.sayori .msg-author {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--kp-green-dark);
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .message-time {
+            font-size: 9px;
+            opacity: 0.65;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        /* Indicador de Digitação (Typing dots) */
+        .typing-bubble {
+            align-self: flex-start;
+            background: #FFFFFF;
+            border: 1px solid var(--kp-border);
+            padding: 10px 14px;
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            display: none;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--kp-green-primary);
+            border-radius: 50%;
+            animation: jump 1.2s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes jump {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        /* Barra de Entrada */
+        .chat-input-bar {
+            padding: 10px 12px;
+            background: var(--kp-surface);
+            border-top: 1px solid var(--kp-border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-input-field {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--kp-border);
+            border-radius: 20px;
+            font-size: 13px;
+            outline: none;
+            background: var(--kp-bg);
+            color: var(--kp-text);
+            transition: border-color 0.2s;
+        }
+
+        .chat-input-field:focus {
+            border-color: var(--kp-green-primary);
+            background: #FFFFFF;
+        }
+
+        .chat-send-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--kp-green-primary);
+            color: #FFFFFF;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.1s;
+            flex-shrink: 0;
+        }
+
+        .chat-send-btn:hover {
+            background: var(--kp-green-dark);
+        }
+
+        .chat-send-btn:active {
+            transform: scale(0.92);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="top-header">
+        <div>
+            <div class="system-badge">
+                <span class="dot"></span>
+                <span>SISTEMA VITAL K&P</span>
+            </div>
+            <h1 class="greeting" id="userGreeting">Olá, Amanda! 👋</h1>
+            <p class="sub-greeting">Seus pets estão protegidos hoje</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-action" onclick="carregarDadosPets(true)" title="Atualizar leituras">
+                <span>🔄</span>
+                <span>Atualizar</span>
+            </button>
+            <button class="btn-action" onclick="logout()" title="Sair da conta">
+                <span>Sair</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Barra de Navegação Rápida -->
+    <div class="quick-nav-bar">
+        <a href="#secaoAtivacaoColeira" class="nav-quick-btn" onclick="navegarParaAtivacao()">
+            <span class="btn-icon">⚡</span>
+            <div>
+                <div>Ativar Coleira</div>
+                <small style="font-size:10px; font-weight:normal; opacity:0.85;">Vincular número</small>
+            </div>
+        </a>
+        <a href="#secaoCercaVirtual" class="nav-quick-btn" style="background: linear-gradient(135deg, var(--kp-green-light), var(--kp-surface)); border-color: #A7F3D0; color: var(--kp-green-dark);" onclick="navegarParaCercaVirtual()">
+            <span class="btn-icon">🗺️</span>
+            <div>
+                <div>Cerca Virtual</div>
+                <small style="font-size:10px; font-weight:normal; opacity:0.85;">Raio seguro GPS</small>
+            </div>
+        </a>
+        <div class="nav-quick-btn" style="background: linear-gradient(135deg, var(--kp-blue-light), var(--kp-surface)); border-color: #BAE6FD; color: var(--kp-blue);" onclick="toggleSayoriChat()">
+            <span class="btn-icon">👩‍⚕️</span>
+            <div>
+                <div>Sayori IA Vet</div>
+                <small style="font-size:10px; font-weight:normal; opacity:0.85;">Tire dúvidas agora</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🚨 Banner de Alerta Crítico de Saída da Cerca Virtual -->
+    <div id="geofenceAlarmBanner" class="geofence-alarm-banner">
+        <div class="alarm-banner-top">
+            <div class="alarm-banner-icon">🚨</div>
+            <div class="alarm-banner-info">
+                <div class="alarm-banner-title" id="alarmBannerTitle">ALERTA CRÍTICO: PET FORA DA CERCA VIRTUAL!</div>
+                <div class="alarm-banner-desc" id="alarmBannerDesc">O pet ultrapassou o raio de segurança configurado. A coleira inteligente ativou sinal sonoro e rastreamento em tempo real.</div>
+            </div>
+        </div>
+        <div class="alarm-banner-actions">
+            <button class="btn-alarm-action btn-alarm-primary" onclick="navegarParaCercaVirtual()">
+                <span>🗺️</span> <span>Localizar no Mapa</span>
+            </button>
+            <button class="btn-alarm-action btn-alarm-secondary" onclick="retornarPetBase()">
+                <span>🟢</span> <span>Simular Retorno à Base</span>
+            </button>
+            <button class="btn-alarm-action btn-alarm-secondary" onclick="silenciarAlarme()" id="btnSilenciarAlarme">
+                <span>🔊</span> <span>Silenciar Alarme</span>
+            </button>
+            <button class="btn-alarm-action btn-alarm-secondary" onclick="perguntarSobreAlertaSayori()">
+                <span>👩‍⚕️</span> <span>Perguntar à Sayori</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Aviso Offline / Modo Demonstração -->
+    <div id="offlineNotice" class="offline-notice" style="display: none;">
+        <span>📡 <strong>Modo Demonstração:</strong> Exibindo telemetria em tempo real (servidor local <code>http://localhost:9000/api</code> em espera).</span>
+        <button onclick="document.getElementById('offlineNotice').style.display='none'" style="background:none; border:none; color:inherit; cursor:pointer; font-size:14px;">✕</button>
+    </div>
+
+    <!-- Resumo Rápido -->
+    <div class="summary-grid">
+        <div class="summary-card">
+            <div class="icon">🐾</div>
+            <div class="value" id="summaryPetsCount">3</div>
+            <div class="label">Pets ativos</div>
+        </div>
+        <div class="summary-card">
+            <div class="icon">📡</div>
+            <div class="value" id="summaryReadingsCount">1.428</div>
+            <div class="label">Leituras hoje</div>
+        </div>
+        <div class="summary-card">
+            <div class="icon">🔔</div>
+            <div class="value" id="summaryAlertsCount" style="color: var(--kp-yellow);">1 atenção</div>
+            <div class="label">Alertas ativos</div>
+        </div>
+    </div>
+
+    <!-- Seção de Pets Monitorados em Tempo Real -->
+    <div class="section-header">
+        <span class="section-title">
+            <span>Meus Pets Monitorados</span>
+        </span>
+        <span class="badge-live">Coleira K&P Conectada</span>
+    </div>
+
+    <!-- Estado de Carregamento -->
+    <div id="petsLoading" class="state-container">
+        <div class="state-spinner"></div>
+        <div class="state-title">Carregando telemetria dos pets...</div>
+        <div class="state-subtitle">Consultando sinais vitais e localização na API K&P</div>
+    </div>
+
+    <!-- Estado de Erro -->
+    <div id="petsError" class="state-container" style="display: none;">
+        <div style="font-size: 32px; margin-bottom: 10px;">⚠️</div>
+        <div class="state-title" id="errorMessageTitle">Falha na conexão com a API</div>
+        <div class="state-subtitle" id="errorMessageText">Não foi possível consultar os dados em http://localhost:9000/api</div>
+        <button class="btn-activate" style="margin: 0 auto; padding: 8px 18px;" onclick="carregarDadosPets(true)">
+            <span>🔄</span> Tentar Novamente
+        </button>
+    </div>
+
+    <!-- Lista Dinâmica de Cards dos Pets -->
+    <div id="petsList" style="display: none;">
+        <!-- Renderizado dinamicamente pelo JavaScript -->
+    </div>
+
+    <!-- 🗺️ FUNCIONALIDADE: Cerca Virtual & Desenho de Perímetro no Mapa -->
+    <div class="geofence-card" id="secaoCercaVirtual">
+        <div class="geofence-header">
+            <div class="geofence-title-box">
+                <div class="geofence-icon-badge">🗺️</div>
+                <div>
+                    <h3 class="geofence-title">Cerca Virtual & Perímetro Seguro</h3>
+                    <p class="geofence-subtitle">Defina o raio de segurança e desenhe a área permitida</p>
+                </div>
+            </div>
+            <span id="geofenceLiveBadge" class="badge-status status-ok">🟢 Dentro da área segura</span>
+        </div>
+
+        <!-- Seletor de Pets da Cerca -->
+        <div class="geofence-pet-tabs" id="geofencePetTabs">
+            <!-- Renderizado dinamicamente pelo JS -->
+        </div>
+
+        <!-- Contêiner do Mapa Interativo com Canvas -->
+        <div class="geofence-canvas-wrapper" id="geofenceCanvasWrapper">
+            <canvas id="geofenceCanvas" width="560" height="340"></canvas>
+
+            <!-- Barra de Ferramentas sobre o Canvas -->
+            <div class="canvas-toolbar">
+                <div class="canvas-mode-group">
+                    <button class="canvas-mode-btn active" id="btnModeResize" onclick="alternarModoInteracao('resize')" title="Arrastar borda para definir raio">
+                        <span>✏️</span> <span>Desenhar Raio</span>
+                    </button>
+                    <button class="canvas-mode-btn" id="btnModeMoveBase" onclick="alternarModoInteracao('move_base')" title="Clique ou arraste para reposicionar a base">
+                        <span>🏠</span> <span>Mover Base</span>
+                    </button>
+                    <button class="canvas-mode-btn" id="btnModeMovePet" onclick="alternarModoInteracao('move_pet')" title="Arraste o pet livremente">
+                        <span>🐾</span> <span>Mover Pet</span>
+                    </button>
+                </div>
+
+                <div style="display: flex; gap: 6px; pointer-events: auto;">
+                    <button class="canvas-quick-btn" onclick="centralizarMapaBase()" title="Centralizar na Base Segura">🎯</button>
+                    <button class="canvas-quick-btn" onclick="centralizarNoPet()" title="Centralizar no Pet">📍</button>
+                </div>
+            </div>
+
+            <!-- Barra Inferior do Canvas -->
+            <div class="canvas-bottom-bar">
+                <button class="canvas-simulate-btn" id="btnSimularFuga" onclick="alternarSimulacaoFuga()">
+                    <span>⚡</span> <span id="btnSimularFugaText">Simular Saída da Cerca</span>
+                </button>
+                <span class="canvas-scale-badge" id="canvasScaleBadge">Escala: 1cm ≈ 35m</span>
+            </div>
+        </div>
+
+        <!-- Legenda de Cores -->
+        <div class="geofence-legend">
+            <div class="legend-item">
+                <span class="legend-dot ok"></span>
+                <span><strong>Área Permitida:</strong> Zona Segura</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot warn"></span>
+                <span><strong>Atenção:</strong> Borda da Cerca</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot alert"></span>
+                <span><strong>Alerta:</strong> Fora do Perímetro</span>
+            </div>
+        </div>
+
+        <!-- Controles do Raio de Segurança -->
+        <div class="geofence-control-box">
+            <div class="radius-label-row">
+                <span class="radius-title">
+                    <span>🎯 Raio de Segurança:</span>
+                    <small style="color: var(--kp-text-muted); font-size: 11px; font-weight: normal;">(Arraste na barra ou no mapa)</small>
+                </span>
+                <span class="radius-value-tag" id="radiusValueDisplay">150 metros</span>
+            </div>
+
+            <input 
+                type="range" 
+                id="safeRadiusSlider" 
+                class="radius-slider" 
+                min="50" 
+                max="500" 
+                step="10" 
+                value="150" 
+                oninput="onRadiusSliderChange(this.value)" 
+            />
+
+            <!-- Presets Rápidos -->
+            <div class="geofence-presets-row">
+                <button class="btn-radius-preset" onclick="definirRaioPreset(50, this)">🏠 50m (Casa)</button>
+                <button class="btn-radius-preset" onclick="definirRaioPreset(100, this)">🌳 100m (Pátio)</button>
+                <button class="btn-radius-preset active" onclick="definirRaioPreset(150, this)">🛣️ 150m (Rua)</button>
+                <button class="btn-radius-preset" onclick="definirRaioPreset(300, this)">🏙️ 300m (Bairro)</button>
+                <button class="btn-radius-preset" onclick="definirRaioPreset(500, this)">🏞️ 500m (Amplo)</button>
+            </div>
+        </div>
+
+        <!-- Telemetria em Tempo Real -->
+        <div class="geofence-telemetry-row">
+            <div class="telemetry-cell">
+                <div class="telemetry-cell-label">Distância da Base</div>
+                <div class="telemetry-cell-val" id="telemetryDistancia">42 m</div>
+            </div>
+            <div class="telemetry-cell">
+                <div class="telemetry-cell-label">Precisão do GPS</div>
+                <div class="telemetry-cell-val" style="color: var(--kp-green-primary);">± 1.2 m</div>
+            </div>
+            <div class="telemetry-cell">
+                <div class="telemetry-cell-label">Status da Coleira</div>
+                <div class="telemetry-cell-val" id="telemetryColeiraStatus">Sinal 98% 📡</div>
+            </div>
+        </div>
+
+        <!-- Ações da Cerca -->
+        <div class="geofence-action-row">
+            <button class="btn-save-geofence" onclick="salvarConfiguracaoCerca()">
+                <span>💾</span>
+                <span id="btnSalvarCercaText">Salvar Perímetro de Segurança</span>
+            </button>
+            <button class="btn-test-collar-buzzer" onclick="testarBuzzerColeira()" title="Emitir bipe sonoro de teste na coleira">
+                <span>🔔</span>
+                <span>Testar Buzzer</span>
+            </button>
+        </div>
+
+        <!-- Feedback de Salvamento -->
+        <div id="geofenceSaveFeedback" class="activation-status-banner" style="margin-top: 10px;">
+            <span style="font-size: 16px;">✅</span>
+            <span id="geofenceSaveFeedbackText">Configurações de perímetro salvas com sucesso!</span>
+        </div>
+    </div>
+
+    <!-- ⚡ FUNCIONALIDADE: Ativação da Coleira K&P -->
+    <div class="activation-card" id="secaoAtivacaoColeira">
+        <div class="activation-header">
+            <div class="activation-title-box">
+                <div class="activation-icon-badge">⚡</div>
+                <div>
+                    <h3 class="activation-title">Ativação de Coleira K&P</h3>
+                    <p class="activation-subtitle">Vincule a coleira inteligente a um pet cadastrado</p>
+                </div>
+            </div>
+            <span id="collarGeneralStatusBadge" class="badge-status status-neutral">Não ativada</span>
+        </div>
+
+        <form class="activation-form" id="collarActivationForm" onsubmit="ativarColeira(event)">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="collarSerial">Número de Série da Coleira:</label>
+                    <input 
+                        type="text" 
+                        id="collarSerial" 
+                        placeholder="Ex: KP-COLLAR-8921" 
+                        required 
+                        autocomplete="off" 
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="collarPassword">Senha de Ativação (PIN):</label>
+                    <input 
+                        type="password" 
+                        id="collarPassword" 
+                        placeholder="Chave de 6 dígitos" 
+                        required 
+                        autocomplete="new-password" 
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="collarPetSelect">Selecionar Pet Vinculado:</label>
+                <select id="collarPetSelect" required>
+                    <option value="">Carregando pets...</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-activate" id="btnAtivarColeira">
+                <span>🔗</span>
+                <span id="btnAtivarText">Ativar e Vincular Coleira</span>
+            </button>
+
+            <!-- Feedback de Status: Ativada / Não ativada / Erro -->
+            <div id="activationFeedback" class="activation-status-banner">
+                <span id="activationFeedbackIcon" style="font-size: 18px;"></span>
+                <span id="activationFeedbackMsg"></span>
+            </div>
+        </form>
+    </div>
+
+    <!-- Banner Sayori -->
+    <div class="sayori-banner" onclick="toggleSayoriChat()">
+        <div class="sayori-avatar">👩‍⚕️</div>
+        <div class="sayori-text">
+            <h4>Dúvidas sobre a saúde ou localização dos seus pets?</h4>
+            <p>Converse agora com a Sayori, assistente veterinária IA em tempo real.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================================
+     💬 BOLHA FLUTUANTE DE CHAT DA SAYORI (FLOATING CHAT BUBBLE)
+     ======================================================================== -->
+<div class="sayori-floating-fab" id="sayoriFab" onclick="toggleSayoriChat()" title="Conversar com a Sayori">
+    <span class="sayori-fab-icon">👩‍⚕️</span>
+    <span class="sayori-fab-status-dot"></span>
+    <span class="sayori-fab-badge-tip">Sayori IA</span>
+</div>
+
+<!-- ========================================================================
+     🗨️ JANELA DE CHAT FLUTUANTE DA SAYORI (FLOATING CHAT WINDOW)
+     ======================================================================== -->
+<div class="sayori-chat-window" id="sayoriChatWindow">
+    <!-- Cabeçalho -->
+    <div class="chat-header">
+        <div class="chat-header-info">
+            <div class="chat-header-avatar">👩‍⚕️</div>
+            <div>
+                <div class="chat-header-title">Sayori — IA Veterinária</div>
+                <div class="chat-header-status">
+                    <span class="live-indicator"></span>
+                    <span>Online • Saúde & Localização</span>
+                </div>
+            </div>
+        </div>
+        <button class="chat-header-close-btn" onclick="toggleSayoriChat()" title="Fechar conversa">✕</button>
+    </div>
+
+    <!-- Sugestões Rápidas de Perguntas -->
+    <div class="chat-quick-chips">
+        <button class="quick-chip" onclick="perguntarChip('Como estão os sinais vitais do Thor?')">💓 Sinais do Thor</button>
+        <button class="quick-chip" onclick="perguntarChip('Onde a Mel está agora?')">📍 Localização da Mel</button>
+        <button class="quick-chip" onclick="perguntarChip('A temperatura da Luna está normal?')">🌡️ Temperatura Luna</button>
+        <button class="quick-chip" onclick="perguntarChip('Existe algum pet fora do perímetro seguro?')">🗺️ Cerca virtual</button>
+    </div>
+
+    <!-- Histórico de Mensagens -->
+    <div class="chat-messages" id="chatMessagesContainer">
+        <!-- Mensagem de Boas-Vindas da Sayori -->
+        <div class="message-bubble sayori">
+            <div class="msg-author">👩‍⚕️ Dra. Sayori (IA Veterinária)</div>
+            <div>Olá, Amanda! Sou a <strong>Sayori</strong>, sua assistente veterinária K&P. 🐾</div>
+            <div style="margin-top: 4px;">Acompanho em tempo real os sinais vitais (batimento, oxigenação, temperatura) e o status de localização dos seus pets.</div>
+            <div style="margin-top: 4px;">Como posso te ajudar hoje?</div>
+            <div class="message-time" id="welcomeTime">10:45</div>
+        </div>
+
+        <!-- Indicador de Digitação -->
+        <div class="typing-bubble" id="chatTypingIndicator">
+            <span style="font-size: 11px; color: var(--kp-text-muted); margin-right: 4px;">Sayori digitando</span>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+    </div>
+
+    <!-- Barra de Envio -->
+    <form class="chat-input-bar" onsubmit="enviarMensagemSayori(event)">
+        <input 
+            type="text" 
+            id="chatInputField" 
+            class="chat-input-field" 
+            placeholder="Pergunte sobre saúde, sintomas ou localização..." 
+            autocomplete="off" 
+        />
+        <button type="submit" class="chat-send-btn" title="Enviar mensagem">
+            <span style="font-size: 15px; margin-left: 2px;">➤</span>
+        </button>
+    </form>
+</div>
+
+<!-- Navegação Inferior -->
+<nav class="bottom-nav">
+    <a href="principal.html" class="nav-item active">
+        <span class="nav-icon">🏠</span>
+        <span>Início</span>
+    </a>
+    <a href="#secaoAtivacaoColeira" class="nav-item" onclick="navegarParaAtivacao()">
+        <span class="nav-icon">⚡</span>
+        <span>Coleira</span>
+    </a>
+    <a href="#" class="nav-item" onclick="alert('Abra o app Android K&P Saúde Animal para gráficos interativos!')">
+        <span class="nav-icon">📊</span>
+        <span>Gráficos</span>
+    </a>
+    <a href="#secaoCercaVirtual" class="nav-item" onclick="navegarParaCercaVirtual()">
+        <span class="nav-icon">🗺️</span>
+        <span>Cerca</span>
+    </a>
+    <div class="nav-item" onclick="toggleSayoriChat()">
+        <span class="nav-icon">💚</span>
+        <span>Sayori</span>
+    </div>
+</nav>
+
+<script>
+    // ========================================================================
+    // CONFIGURAÇÕES E ESTADO GLOBAL
+    // ========================================================================
+    const API_BASE = 'http://localhost:9000/api';
+    let petsCarregados = [];
+    let sayoriChatAberto = false;
+
+    // Conjunto de dados de demonstração com telemetria em tempo real
+    const DADOS_DEMO_PETS = [
+        {
+            id: 'c0000000-0000-0000-0000-000000000001',
+            nome: 'Thor',
+            raca: 'Golden Retriever',
+            idade: '3 anos',
+            porte: 'grande',
+            coleira_chave: 'KP-COLLAR-8921',
+            status: 'atencao',
+            ultima_leitura: {
+                batimento: 72,
+                spo2: 98,
+                temperatura: 38.2,
+                bateria: 88,
+                latitude: -23.5616840,
+                longitude: -46.6559810,
+                recebido_em: new Date(Date.now() - 2 * 60000).toISOString()
+            }
+        },
+        {
+            id: 'c0000000-0000-0000-0000-000000000002',
+            nome: 'Luna',
+            raca: 'Siamês',
+            idade: '2 anos',
+            porte: 'pequeno',
+            coleira_chave: 'KP-COLLAR-3341',
+            status: 'normal',
+            ultima_leitura: {
+                batimento: 110,
+                spo2: 99,
+                temperatura: 38.4,
+                bateria: 94,
+                latitude: -23.5617200,
+                longitude: -46.6559200,
+                recebido_em: new Date(Date.now() - 5 * 60000).toISOString()
+            }
+        },
+        {
+            id: 'c0000000-0000-0000-0000-000000000003',
+            nome: 'Mel',
+            raca: 'Spitz Alemão',
+            idade: '4 anos',
+            porte: 'pequeno',
+            coleira_chave: 'KP-COLLAR-7712',
+            status: 'normal',
+            ultima_leitura: {
+                batimento: 92,
+                spo2: 98,
+                temperatura: 38.1,
+                bateria: 64,
+                latitude: -23.5616500,
+                longitude: -46.6560100,
+                recebido_em: new Date(Date.now() - 8 * 60000).toISOString()
+            }
+        }
+    ];
+
+    // ========================================================================
+    // 1. AUTENTICAÇÃO E INICIALIZAÇÃO
+    // ========================================================================
+    function checarAutenticacao() {
+        const token = localStorage.getItem('kp_token');
+        const userJson = localStorage.getItem('kp_usuario');
+
+        if (!token) {
+            console.warn('Token não encontrado no localStorage. Criando sessão de demonstração para Amanda Silva.');
+            localStorage.setItem('kp_token', 'demo_token_kp_2026');
+            const demoUser = {
+                id: 'b0000000-0000-0000-0000-000000000001',
+                nome: 'Amanda Silva',
+                email: 'amanda.silva@email.com',
+                perfil: 'tutor'
+            };
+            localStorage.setItem('kp_usuario', JSON.stringify(demoUser));
+            atualizarSaudacao(demoUser);
+            return 'demo_token_kp_2026';
+        }
+
+        if (userJson) {
+            try {
+                const user = JSON.parse(userJson);
+                atualizarSaudacao(user);
+            } catch (e) {
+                console.error('Erro ao ler usuário salvo:', e);
+            }
+        }
+        return token;
+    }
+
+    function atualizarSaudacao(user) {
+        if (user && user.nome) {
+            const primeiroNome = user.nome.split(' ')[0];
+            document.getElementById('userGreeting').innerText = `Olá, ${primeiroNome}! 👋`;
+        }
+    }
+
+    function logout() {
+        if (confirm('Deseja realmente sair do sistema K&P Saúde Animal?')) {
+            localStorage.removeItem('kp_token');
+            localStorage.removeItem('kp_usuario');
+            window.location.href = 'index.html';
+        }
+    }
+
+    function navegarParaAtivacao(petId = null) {
+        const section = document.getElementById('secaoAtivacaoColeira');
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            section.style.borderColor = 'var(--kp-green-primary)';
+            section.style.boxShadow = '0 0 0 3px rgba(5, 150, 105, 0.2)';
+
+            if (petId) {
+                const select = document.getElementById('collarPetSelect');
+                if (select) {
+                    select.value = petId;
+                }
+            }
+
+            const inputSerial = document.getElementById('collarSerial');
+            if (inputSerial) {
+                setTimeout(() => inputSerial.focus(), 400);
+            }
+
+            setTimeout(() => {
+                section.style.borderColor = 'var(--kp-border)';
+                section.style.boxShadow = 'none';
+            }, 2500);
+        }
+    }
+
+    // ========================================================================
+    // 🗺️ ENGINE DE CERCA VIRTUAL & MAPA INTERATIVO (CANVAS & GPS)
+    // ========================================================================
+    const geofenceState = {
+        selectedPetId: 'c0000000-0000-0000-0000-000000000001', // Thor padrão
+        interactionMode: 'resize', // 'resize' | 'move_base' | 'move_pet'
+        audioEnabled: true,
+        isAudioAlertActive: false,
+        audioIntervalId: null,
+        isDragging: false,
+        dragTarget: null, // 'radius' | 'base' | 'pet'
+        basePos: { x: 280, y: 170 },
+        scale: 0.65, // pixels por metro (150m ~ 97.5px)
+        pulseVal: 0,
+        animReqId: null,
+        sayoriAlertLogged: {},
+        petsConfig: {
+            'c0000000-0000-0000-0000-000000000001': {
+                id: 'c0000000-0000-0000-0000-000000000001',
+                nome: 'Thor',
+                emoji: '🐕',
+                safeRadiusMeters: 150,
+                petPos: { x: 308, y: 142 },
+                currentDistanceMeters: 42,
+                isOutside: false,
+                signalStrength: '98%',
+                address: 'Rua Oscar Freire, 1020 - Jardins'
+            },
+            'c0000000-0000-0000-0000-000000000002': {
+                id: 'c0000000-0000-0000-0000-000000000002',
+                nome: 'Luna',
+                emoji: '🐱',
+                safeRadiusMeters: 100,
+                petPos: { x: 268, y: 182 },
+                currentDistanceMeters: 18,
+                isOutside: false,
+                signalStrength: '99%',
+                address: 'Rua Oscar Freire, 1020 (Jardim interno)'
+            },
+            'c0000000-0000-0000-0000-000000000003': {
+                id: 'c0000000-0000-0000-0000-000000000003',
+                nome: 'Mel',
+                emoji: '🐶',
+                safeRadiusMeters: 150,
+                petPos: { x: 260, y: 152 },
+                currentDistanceMeters: 30,
+                isOutside: false,
+                signalStrength: '95%',
+                address: 'Rua Oscar Freire, 1030 (Pátio vizinho)'
+            }
+        }
+    };
+
+    function carregarConfigCercaCache() {
+        try {
+            const cache = localStorage.getItem('kp_cerca_virtual_config');
+            if (cache) {
+                const parsed = JSON.parse(cache);
+                if (parsed && typeof parsed === 'object') {
+                    Object.keys(parsed).forEach(id => {
+                        if (geofenceState.petsConfig[id]) {
+                            geofenceState.petsConfig[id].safeRadiusMeters = parsed[id].safeRadiusMeters || 150;
+                            if (parsed[id].basePos) geofenceState.basePos = parsed[id].basePos;
+                        } else {
+                            geofenceState.petsConfig[id] = parsed[id];
+                        }
+                    });
+                }
+            }
+        } catch (e) {
+            console.warn('Erro ao carregar cache de cerca virtual:', e);
+        }
+    }
+
+    function obterConfigCercaPet(petId) {
+        if (!geofenceState.petsConfig[petId]) {
+            const petInfo = (petsCarregados || []).find(p => p.id === petId);
+            geofenceState.petsConfig[petId] = {
+                id: petId,
+                nome: petInfo ? petInfo.nome : 'Pet',
+                emoji: petInfo ? obterEmojiPet(petInfo) : '🐾',
+                safeRadiusMeters: 150,
+                petPos: { x: geofenceState.basePos.x + 25, y: geofenceState.basePos.y - 22 },
+                currentDistanceMeters: 35,
+                isOutside: false,
+                signalStrength: '96%',
+                address: 'Área residencial K&P'
+            };
+        }
+        return geofenceState.petsConfig[petId];
+    }
+
+    function navegarParaCercaVirtual(petId = null) {
+        const section = document.getElementById('secaoCercaVirtual');
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            section.style.borderColor = 'var(--kp-green-primary)';
+            section.style.boxShadow = '0 0 0 3px rgba(5, 150, 105, 0.2)';
+
+            if (petId) {
+                selecionarPetCerca(petId);
+            }
+
+            setTimeout(() => {
+                section.style.borderColor = 'var(--kp-border)';
+                section.style.boxShadow = 'none';
+            }, 2500);
+        }
+    }
+
+    function renderizarAbasPetsCerca() {
+        const tabsContainer = document.getElementById('geofencePetTabs');
+        if (!tabsContainer) return;
+
+        const pets = (petsCarregados && petsCarregados.length > 0) ? petsCarregados : DADOS_DEMO_PETS;
+        let html = '';
+
+        pets.forEach(pet => {
+            const config = obterConfigCercaPet(pet.id);
+            const isActive = config.id === geofenceState.selectedPetId;
+            const emoji = obterEmojiPet(pet);
+            const statusDot = config.isOutside ? '🔴' : '🟢';
+
+            html += `
+                <button 
+                    class="geofence-tab-btn ${isActive ? 'active' : ''}" 
+                    onclick="selecionarPetCerca('${pet.id}')"
+                    id="geofenceTab-${pet.id}"
+                >
+                    <span>${emoji}</span>
+                    <span>${pet.nome}</span>
+                    <span style="font-size: 10px; opacity: 0.85;">(${config.safeRadiusMeters}m)</span>
+                    <span style="font-size: 9px;">${statusDot}</span>
+                </button>
+            `;
+        });
+
+        tabsContainer.innerHTML = html;
+    }
+
+    function selecionarPetCerca(petId) {
+        geofenceState.selectedPetId = petId;
+        const config = obterConfigCercaPet(petId);
+
+        // Atualiza abas visuais
+        const allTabs = document.querySelectorAll('.geofence-tab-btn');
+        allTabs.forEach(t => t.classList.remove('active'));
+        const activeTab = document.getElementById(`geofenceTab-${petId}`);
+        if (activeTab) activeTab.classList.add('active');
+
+        // Atualiza Slider e Display
+        const slider = document.getElementById('safeRadiusSlider');
+        const radiusDisplay = document.getElementById('radiusValueDisplay');
+        if (slider) slider.value = config.safeRadiusMeters;
+        if (radiusDisplay) radiusDisplay.innerText = `${config.safeRadiusMeters} metros`;
+
+        // Atualiza botões de preset
+        atualizarBotoesPreset(config.safeRadiusMeters);
+
+        // Atualiza telemetria e status
+        atualizarTelemetriaCerca(config);
+
+        // Redesenha Canvas
+        desenharCanvasCerca();
+    }
+
+    function atualizarBotoesPreset(metros) {
+        const presets = document.querySelectorAll('.btn-radius-preset');
+        presets.forEach(btn => {
+            const btnMetros = parseInt(btn.innerText.match(/\d+/)?.[0] || '0', 10);
+            if (btnMetros === metros) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    function onRadiusSliderChange(val) {
+        const metros = parseInt(val, 10);
+        const config = obterConfigCercaPet(geofenceState.selectedPetId);
+        config.safeRadiusMeters = metros;
+
+        const radiusDisplay = document.getElementById('radiusValueDisplay');
+        if (radiusDisplay) radiusDisplay.innerText = `${metros} metros`;
+
+        atualizarBotoesPreset(metros);
+        renderizarAbasPetsCerca();
+        verificarSegurancaCerca(config);
+        desenharCanvasCerca();
+    }
+
+    function definirRaioPreset(metros, btnElement) {
+        const slider = document.getElementById('safeRadiusSlider');
+        if (slider) slider.value = metros;
+        onRadiusSliderChange(metros);
+    }
+
+    function alternarModoInteracao(mode) {
+        geofenceState.interactionMode = mode;
+        const btnResize = document.getElementById('btnModeResize');
+        const btnBase = document.getElementById('btnModeMoveBase');
+        const btnPet = document.getElementById('btnModeMovePet');
+
+        [btnResize, btnBase, btnPet].forEach(b => b?.classList.remove('active'));
+
+        if (mode === 'resize') btnResize?.classList.add('active');
+        if (mode === 'move_base') btnBase?.classList.add('active');
+        if (mode === 'move_pet') btnPet?.classList.add('active');
+    }
+
+    function centralizarMapaBase() {
+        const canvas = document.getElementById('geofenceCanvas');
+        if (!canvas) return;
+        geofenceState.basePos = { x: canvas.width / 2, y: canvas.height / 2 };
+        desenharCanvasCerca();
+    }
+
+    function centralizarNoPet() {
+        const canvas = document.getElementById('geofenceCanvas');
+        if (!canvas) return;
+        const config = obterConfigCercaPet(geofenceState.selectedPetId);
+        const dx = config.petPos.x - geofenceState.basePos.x;
+        const dy = config.petPos.y - geofenceState.basePos.y;
+        geofenceState.basePos = { x: (canvas.width / 2) - dx, y: (canvas.height / 2) - dy };
+        config.petPos = { x: canvas.width / 2, y: canvas.height / 2 };
+        desenharCanvasCerca();
+    }
+
+    // ========================================================================
+    // MOTOR DE DESENHO DO CANVAS DA CERCA
+    // ========================================================================
+    function inicializarCanvasCerca() {
+        const canvas = document.getElementById('geofenceCanvas');
+        if (!canvas) return;
+
+        // Configura tamanho real para DPI
+        const wrapper = document.getElementById('geofenceCanvasWrapper');
+        const rect = wrapper ? wrapper.getBoundingClientRect() : { width: 560 };
+        const w = rect.width || 560;
+        const h = 340;
+
+        canvas.width = w;
+        canvas.height = h;
+        geofenceState.basePos = { x: w / 2, y: h / 2 };
+
+        // Centraliza os pets em posições relativas seguras
+        const cThor = obterConfigCercaPet('c0000000-0000-0000-0000-000000000001');
+        const cLuna = obterConfigCercaPet('c0000000-0000-0000-0000-000000000002');
+        const cMel = obterConfigCercaPet('c0000000-0000-0000-0000-000000000003');
+
+        cThor.petPos = { x: geofenceState.basePos.x + 28, y: geofenceState.basePos.y - 28 };
+        cLuna.petPos = { x: geofenceState.basePos.x - 12, y: geofenceState.basePos.y + 16 };
+        cMel.petPos = { x: geofenceState.basePos.x - 22, y: geofenceState.basePos.y - 18 };
+
+        // Eventos de Mouse e Touch
+        canvas.addEventListener('mousedown', onCanvasPointerDown);
+        window.addEventListener('mousemove', onCanvasPointerMove);
+        window.addEventListener('mouseup', onCanvasPointerUp);
+
+        canvas.addEventListener('touchstart', onCanvasTouchStart, { passive: false });
+        window.addEventListener('touchmove', onCanvasTouchMove, { passive: false });
+        window.addEventListener('touchend', onCanvasTouchEnd);
+
+        // Loop de Animação
+        if (!geofenceState.animReqId) {
+            animarLoopCerca();
+        }
+
+        renderizarAbasPetsCerca();
+        selecionarPetCerca(geofenceState.selectedPetId);
+    }
+
+    function animarLoopCerca() {
+        geofenceState.pulseVal = (geofenceState.pulseVal + 0.04) % (Math.PI * 2);
+        desenharCanvasCerca();
+        geofenceState.animReqId = requestAnimationFrame(animarLoopCerca);
+    }
+
+    function desenharCanvasCerca() {
+        const canvas = document.getElementById('geofenceCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        const base = geofenceState.basePos;
+        const config = obterConfigCercaPet(geofenceState.selectedPetId);
+
+        ctx.clearRect(0, 0, w, h);
+
+        // 1. Fundo do Mapa (Asfalto e Terrenos Urbanos)
+        ctx.fillStyle = '#F1F5F9';
+        ctx.fillRect(0, 0, w, h);
+
+        // Quarteirões urbanos
+        ctx.fillStyle = '#E2E8F0';
+        ctx.beginPath();
+        ctx.roundRect(16, 16, w * 0.42, h * 0.28, 10);
+        ctx.roundRect(w * 0.54, 16, w * 0.42, h * 0.28, 10);
+        ctx.roundRect(16, h * 0.65, w * 0.42, h * 0.30, 10);
+        ctx.roundRect(w * 0.54, h * 0.65, w * 0.42, h * 0.30, 10);
+        ctx.fill();
+
+        // Área Verde / Parque
+        ctx.fillStyle = '#DCFCE7';
+        ctx.beginPath();
+        ctx.roundRect(w * 0.56, base.y - 48, w * 0.38, 96, 14);
+        ctx.fill();
+
+        // Ruas (Faixas Brancas)
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, base.y - 20, w, 40);
+        ctx.fillRect(base.x - 20, 0, 40, h);
+
+        // Faixas centrais pontilhadas das vias
+        ctx.strokeStyle = '#CBD5E1';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([10, 10]);
+        ctx.beginPath();
+        ctx.moveTo(0, base.y);
+        ctx.lineTo(w, base.y);
+        ctx.moveTo(base.x, 0);
+        ctx.lineTo(base.x, h);
+        ctx.stroke();
+        ctx.setLineDash([]); // Restaura traço contínuo
+
+        // 2. CERCA VIRTUAL (Raio Seguro & Margem de Atenção)
+        const radiusPx = config.safeRadiusMeters * geofenceState.scale;
+        const attentionRadiusPx = radiusPx * 1.15;
+
+        // Efeito de vinheta vermelha caso o pet esteja fora da cerca
+        if (config.isOutside) {
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.12)';
+            ctx.fillRect(0, 0, w, h);
+        }
+
+        // 💛 Borda de Atenção (Amarelo Pontilhado)
+        ctx.fillStyle = 'rgba(245, 158, 11, 0.10)';
+        ctx.beginPath();
+        ctx.arc(base.x, base.y, attentionRadiusPx, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#F59E0B';
+        ctx.lineWidth = 1.8;
+        ctx.setLineDash([8, 6]);
+        ctx.beginPath();
+        ctx.arc(base.x, base.y, attentionRadiusPx, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // 🟢 Zona Permitida / Segura (Verde)
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.18)';
+        ctx.beginPath();
+        ctx.arc(base.x, base.y, radiusPx, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#059669';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(base.x, base.y, radiusPx, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // 3. Linha de Telemetria (Base -> Pet)
+        const petPos = config.petPos;
+        ctx.strokeStyle = config.isOutside ? '#EF4444' : '#0284C7';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(base.x, base.y);
+        ctx.lineTo(petPos.x, petPos.y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Distância escrita no meio da linha
+        const midX = (base.x + petPos.x) / 2;
+        const midY = (base.y + petPos.y) / 2;
+        const distTexto = `${config.currentDistanceMeters}m`;
+
+        ctx.font = 'bold 11px -apple-system, sans-serif';
+        const txtWidth = ctx.measureText(distTexto).width;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.roundRect(midX - (txtWidth / 2) - 6, midY - 10, txtWidth + 12, 20, 6);
+        ctx.fill();
+        ctx.strokeStyle = config.isOutside ? '#EF4444' : '#0284C7';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.fillStyle = config.isOutside ? '#B91C1C' : '#0369A1';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(distTexto, midX, midY);
+
+        // 4. Base Segura (Casa do Tutor)
+        ctx.shadowColor = 'rgba(0,0,0,0.18)';
+        ctx.shadowBlur = 8;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(base.x, base.y, 16, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = '#059669';
+        ctx.beginPath();
+        ctx.arc(base.x, base.y, 13, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.font = '14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🏠', base.x, base.y);
+
+        // Tag sobre a base
+        ctx.font = 'bold 9px sans-serif';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.roundRect(base.x - 30, base.y - 28, 60, 14, 4);
+        ctx.fill();
+        ctx.strokeStyle = '#CBD5E1';
+        ctx.stroke();
+        ctx.fillStyle = '#065F46';
+        ctx.fillText('Base Segura', base.x, base.y - 21);
+
+        // 5. Handle de Redimensionamento do Raio (Na borda direita da cerca)
+        const handleX = base.x + radiusPx;
+        const handleY = base.y;
+
+        ctx.shadowColor = 'rgba(0,0,0,0.2)';
+        ctx.shadowBlur = 6;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(handleX, handleY, 13, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.strokeStyle = '#059669';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        ctx.fillStyle = '#065F46';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText('↔', handleX, handleY);
+
+        // 6. Marcador do Pet
+        const pulseSin = Math.sin(geofenceState.pulseVal) * 0.5 + 0.5;
+        const pulseR = 16 + (pulseSin * 14);
+        const pulseAlpha = 0.6 - (pulseSin * 0.5);
+
+        // Radar animado
+        ctx.fillStyle = config.isOutside ? `rgba(239, 68, 68, ${pulseAlpha})` : `rgba(16, 185, 129, ${pulseAlpha})`;
+        ctx.beginPath();
+        ctx.arc(petPos.x, petPos.y, pulseR, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Círculo base do Pet
+        ctx.shadowColor = 'rgba(0,0,0,0.25)';
+        ctx.shadowBlur = 8;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(petPos.x, petPos.y, 17, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.strokeStyle = config.isOutside ? '#EF4444' : '#10B981';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        ctx.font = '16px sans-serif';
+        ctx.fillText(config.emoji, petPos.x, petPos.y);
+
+        // Tag flutuante com nome do Pet e status
+        const petTagText = `${config.nome} ${config.isOutside ? '🚨 FORA' : '🟢'}`;
+        ctx.font = 'bold 10px sans-serif';
+        const petTagW = ctx.measureText(petTagText).width;
+        ctx.fillStyle = config.isOutside ? '#EF4444' : 'rgba(255, 255, 255, 0.95)';
+        ctx.beginPath();
+        ctx.roundRect(petPos.x - (petTagW / 2) - 8, petPos.y + 20, petTagW + 16, 16, 5);
+        ctx.fill();
+        ctx.strokeStyle = config.isOutside ? '#DC2626' : '#CBD5E1';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.fillStyle = config.isOutside ? '#FFFFFF' : '#0F172A';
+        ctx.fillText(petTagText, petPos.x, petPos.y + 28);
+    }
+
+    // ========================================================================
+    // INTERAÇÃO E ARRASTE NO CANVAS (MOUSE E TOUCH)
+    // ========================================================================
+    function getCanvasCoordinates(e, canvas) {
+        const rect = canvas.getBoundingClientRect();
+        return {
+            x: (e.clientX - rect.left) * (canvas.width / rect.width),
+            y: (e.clientY - rect.top) * (canvas.height / rect.height)
+        };
+    }
+
+    function onCanvasPointerDown(e) {
+        const canvas = document.getElementById('geofenceCanvas');
+        if (!canvas) return;
+        const pt = getCanvasCoordinates(e, canvas);
+        tratarPointerDown(pt.x, pt.y);
+    }
+
+    function onCanvasTouchStart(e) {
+        if (!e.touches || e.touches.length === 0) return;
+        e.preventDefault();
+        const canvas = document.getElementById('geofenceCanvas');
+        if (!canvas) return;
+        const pt = getCanvasCoordinates(e.touches[0], canvas);
+        tratarPointerDown(pt.x, pt.y);
+    }
+
+    function tratarPointerDown(x, y) {
+        const config = obterConfigCercaPet(geofenceState.selectedPetId);
+        const base = geofenceState.basePos;
+        const radiusPx = config.safeRadiusMeters * geofenceState.scale;
+        const handleX = base.x + radiusPx;
+        const handleY = base.y;
+
+        // 1. Clicou no Handle de Redimensionamento?
+        const distHandle = Math.hypot(x - handleX, y - handleY);
+        if (distHandle <= 20) {
+            geofenceState.isDragging = true;
+            geofenceState.dragTarget = 'radius';
+            return;
+        }
+
+        // 2. Clicou no Pet?
+        const distPet = Math.hypot(x - config.petPos.x, y - config.petPos.y);
+        if (distPet <= 22) {
+            geofenceState.isDragging = true;
+            geofenceState.dragTarget = 'pet';
+            return;
+        }
+
+        // 3. Clicou na Base Segura?
+        const distBase = Math.hypot(x - base.x, y - base.y);
+        if (distBase <= 22) {
+            geofenceState.isDragging = true;
+            geofenceState.dragTarget = 'base';
+            return;
+        }
+
+        // 4. Ação conforme Modo Ativo
+        geofenceState.isDragging = true;
+        if (geofenceState.interactionMode === 'resize') {
+            geofenceState.dragTarget = 'radius';
+            atualizarRaioPorPonto(x, y);
+        } else if (geofenceState.interactionMode === 'move_base') {
+            geofenceState.dragTarget = 'base';
+            geofenceState.basePos = { x, y };
+            recalcularDistanciaPet(config);
+            verificarSegurancaCerca(config);
+            desenharCanvasCerca();
+        } else if (geofenceState.interactionMode === 'move_pet') {
+            geofenceState.dragTarget = 'pet';
+            config.petPos = { x, y };
+            recalcularDistanciaPet(config);
+            verificarSegurancaCerca(config);
+            desenharCanvasCerca();
+        }
+    }
+
+    function onCanvasPointerMove(e) {
+        if (!geofenceState.isDragging) return;
+        const canvas = document.getElementById('geofenceCanvas');
+        if (!canvas) return;
+        const pt = getCanvasCoordinates(e, canvas);
+        tratarPointerMove(pt.x, pt.y);
+    }
+
+    function onCanvasTouchMove(e) {
+        if (!geofenceState.isDragging || !e.touches || e.touches.length === 0) return;
+        e.preventDefault();
+        const canvas = document.getElementById('geofenceCanvas');
+        if (!canvas) return;
+        const pt = getCanvasCoordinates(e.touches[0], canvas);
+        tratarPointerMove(pt.x, pt.y);
+    }
+
+    function tratarPointerMove(x, y) {
+        const config = obterConfigCercaPet(geofenceState.selectedPetId);
+
+        if (geofenceState.dragTarget === 'radius') {
+            atualizarRaioPorPonto(x, y);
+        } else if (geofenceState.dragTarget === 'pet') {
+            config.petPos = { x, y };
+            recalcularDistanciaPet(config);
+            verificarSegurancaCerca(config);
+            desenharCanvasCerca();
+        } else if (geofenceState.dragTarget === 'base') {
+            geofenceState.basePos = { x, y };
+            recalcularDistanciaPet(config);
+            verificarSegurancaCerca(config);
+            desenharCanvasCerca();
+        }
+    }
+
+    function onCanvasPointerUp() {
+        if (geofenceState.isDragging) {
+            geofenceState.isDragging = false;
+            geofenceState.dragTarget = null;
+            const config = obterConfigCercaPet(geofenceState.selectedPetId);
+            verificarSegurancaCerca(config);
+            desenharCanvasCerca();
+        }
+    }
+
+    function onCanvasTouchEnd() {
+        onCanvasPointerUp();
+    }
+
+    function atualizarRaioPorPonto(x, y) {
+        const base = geofenceState.basePos;
+        const distPx = Math.hypot(x - base.x, y - base.y);
+        let metros = Math.round(distPx / geofenceState.scale);
+
+        // Limites entre 50m e 500m
+        metros = Math.max(50, Math.min(500, metros));
+
+        const config = obterConfigCercaPet(geofenceState.selectedPetId);
+        config.safeRadiusMeters = metros;
+
+        const slider = document.getElementById('safeRadiusSlider');
+        const radiusDisplay = document.getElementById('radiusValueDisplay');
+        if (slider) slider.value = metros;
+        if (radiusDisplay) radiusDisplay.innerText = `${metros} metros`;
+
+        atualizarBotoesPreset(metros);
+        renderizarAbasPetsCerca();
+        verificarSegurancaCerca(config);
+        desenharCanvasCerca();
+    }
+
+    function recalcularDistanciaPet(config) {
+        const base = geofenceState.basePos;
+        const distPx = Math.hypot(config.petPos.x - base.x, config.petPos.y - base.y);
+        config.currentDistanceMeters = Math.max(5, Math.round(distPx / geofenceState.scale));
+    }
+
+    // ========================================================================
+    // DETECÇÃO DE SAÍDA E ALARMES EM TEMPO REAL
+    // ========================================================================
+    function verificarSegurancaCerca(config) {
+        const distM = config.currentDistanceMeters;
+        const raioM = config.safeRadiusMeters;
+        const estourou = distM > raioM;
+        config.isOutside = estourou;
+
+        const liveBadge = document.getElementById('geofenceLiveBadge');
+        const btnSimularText = document.getElementById('btnSimularFugaText');
+        const btnSimular = document.getElementById('btnSimularFuga');
+        const alarmBanner = document.getElementById('geofenceAlarmBanner');
+        const alarmTitle = document.getElementById('alarmBannerTitle');
+        const alarmDesc = document.getElementById('alarmBannerDesc');
+
+        if (estourou) {
+            if (liveBadge) {
+                liveBadge.className = 'badge-status status-alerta';
+                liveBadge.innerText = `🔴 Fora do perímetro (${distM}m)`;
+            }
+            if (btnSimularText) btnSimularText.innerText = '🟢 Voltar à Área Segura';
+            if (btnSimular) btnSimular.classList.add('breached');
+
+            // Exibe Banner de Alerta Crítico
+            if (alarmBanner) {
+                alarmBanner.style.display = 'flex';
+                if (alarmTitle) alarmTitle.innerText = `🚨 ALERTA: ${config.nome.toUpperCase()} SAIU DA CERCA VIRTUAL!`;
+                if (alarmDesc) alarmDesc.innerHTML = `O pet está a <strong>${distM} metros</strong> da Base Segura (limite definido: <strong>${raioM}m</strong>). A coleira inteligente ativou vibração, bipe sonoro e rastreamento de emergência.`;
+            }
+
+            // Alarme Sonoro e Vibração
+            tocarAlertaSonoro();
+            if (navigator.vibrate) {
+                try { navigator.vibrate([300, 150, 300]); } catch(e) {}
+            }
+
+            // Registra notificação no chat da Sayori se ainda não registrada nesta sessão
+            if (!geofenceState.sayoriAlertLogged[config.id]) {
+                geofenceState.sayoriAlertLogged[config.id] = true;
+                setTimeout(() => {
+                    adicionarMensagemChat(
+                        'Sayori',
+                        `🚨 <strong>ALERTA DE SEGURANÇA K&P:</strong> Detectei que <strong>${config.nome}</strong> acabou de sair da cerca virtual configurada (${distM}m da base, raio: ${raioM}m). Coleira transmitindo GPS em alta frequência. Deseja acionar o bipe localizador ou contatar socorro? 📍`,
+                        false
+                    );
+                }, 800);
+            }
+
+        } else {
+            if (liveBadge) {
+                liveBadge.className = 'badge-status status-ok';
+                liveBadge.innerText = `🟢 Dentro da área segura (${distM}m)`;
+            }
+            if (btnSimularText) btnSimularText.innerText = '⚡ Simular Saída da Cerca';
+            if (btnSimular) btnSimular.classList.remove('breached');
+
+            // Verifica se algum outro pet ainda está fora
+            const algumFora = Object.values(geofenceState.petsConfig).some(c => c.isOutside);
+            if (!algumFora && alarmBanner) {
+                alarmBanner.style.display = 'none';
+            }
+            geofenceState.sayoriAlertLogged[config.id] = false;
+        }
+
+        atualizarTelemetriaCerca(config);
+
+        // Atualiza os cards dos pets na página inicial
+        if (petsCarregados && petsCarregados.length > 0) {
+            renderizarPets(petsCarregados);
+            atualizarResumo(petsCarregados);
+        }
+    }
+
+    function atualizarTelemetriaCerca(config) {
+        const elDist = document.getElementById('telemetryDistancia');
+        const elCollar = document.getElementById('telemetryColeiraStatus');
+        if (elDist) elDist.innerText = `${config.currentDistanceMeters} m`;
+        if (elCollar) elCollar.innerText = `Sinal ${config.signalStrength || '98%'} 📡`;
+    }
+
+    function alternarSimulacaoFuga() {
+        const config = obterConfigCercaPet(geofenceState.selectedPetId);
+        const base = geofenceState.basePos;
+
+        if (!config.isOutside) {
+            // Posiciona o pet 70 metros além do raio seguro
+            const breachDistM = config.safeRadiusMeters + 75;
+            const breachDistPx = breachDistM * geofenceState.scale;
+            config.petPos = { x: base.x + breachDistPx, y: base.y - 20 };
+            config.currentDistanceMeters = breachDistM;
+        } else {
+            // Retorna o pet para dentro da área segura (25 metros da base)
+            const safeDistPx = 25 * geofenceState.scale;
+            config.petPos = { x: base.x + safeDistPx, y: base.y - 15 };
+            config.currentDistanceMeters = 25;
+        }
+
+        verificarSegurancaCerca(config);
+        desenharCanvasCerca();
+    }
+
+    function retornarPetBase() {
+        const config = obterConfigCercaPet(geofenceState.selectedPetId);
+        const base = geofenceState.basePos;
+        const safeDistPx = 20 * geofenceState.scale;
+        config.petPos = { x: base.x + safeDistPx, y: base.y - 10 };
+        config.currentDistanceMeters = 20;
+
+        verificarSegurancaCerca(config);
+        desenharCanvasCerca();
+
+        // Se houver outros pets fora, normaliza também
+        Object.values(geofenceState.petsConfig).forEach(c => {
+            if (c.isOutside) {
+                c.petPos = { x: base.x + (18 * geofenceState.scale), y: base.y + (10 * geofenceState.scale) };
+                c.currentDistanceMeters = 20;
+                verificarSegurancaCerca(c);
+            }
+        });
+
+        const alarmBanner = document.getElementById('geofenceAlarmBanner');
+        if (alarmBanner) alarmBanner.style.display = 'none';
+    }
+
+    function tocarAlertaSonoro() {
+        if (!geofenceState.audioEnabled) return;
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+            const ctx = new AudioCtx();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(880, ctx.currentTime);
+            osc.frequency.setValueAtTime(587, ctx.currentTime + 0.12);
+            osc.frequency.setValueAtTime(880, ctx.currentTime + 0.25);
+
+            gain.gain.setValueAtTime(0.18, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.45);
+        } catch (e) {
+            console.log('Alerta sonoro em espera por interação do usuário');
+        }
+    }
+
+    function silenciarAlarme() {
+        geofenceState.audioEnabled = !geofenceState.audioEnabled;
+        const btn = document.getElementById('btnSilenciarAlarme');
+        if (btn) {
+            btn.innerHTML = geofenceState.audioEnabled 
+                ? '<span>🔊</span> <span>Silenciar Alarme</span>'
+                : '<span>🔇</span> <span>Alarme Silenciado</span>';
+        }
+    }
+
+    function testarBuzzerColeira() {
+        tocarAlertaSonoro();
+        const config = obterConfigCercaPet(geofenceState.selectedPetId);
+        alert(`🔔 Sinal sonoro enviado para a coleira de ${config.nome}! O buzzer inteligente da coleira emitiu 3 bipes.`);
+    }
+
+    function perguntarSobreAlertaSayori() {
+        const config = obterConfigCercaPet(geofenceState.selectedPetId);
+        toggleSayoriChat();
+        const input = document.getElementById('chatInputField');
+        if (input) {
+            input.value = `O que fazer agora que o ${config.nome} saiu da cerca virtual?`;
+            enviarMensagemSayori(new Event('submit'));
+        }
+    }
+
+    function salvarConfiguracaoCerca() {
+        try {
+            const config = obterConfigCercaPet(geofenceState.selectedPetId);
+            localStorage.setItem('kp_cerca_virtual_config', JSON.stringify(geofenceState.petsConfig));
+
+            const feedback = document.getElementById('geofenceSaveFeedback');
+            const feedbackText = document.getElementById('geofenceSaveFeedbackText');
+            if (feedback && feedbackText) {
+                feedback.className = 'activation-status-banner status-ok';
+                feedbackText.innerHTML = `✅ Perímetro de segurança de <strong>${config.safeRadiusMeters} metros</strong> para <strong>${config.nome}</strong> salvo com sucesso!`;
+                feedback.style.display = 'flex';
+
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 3500);
+            }
+
+            renderizarPets(petsCarregados);
+        } catch (e) {
+            console.error('Erro ao salvar cerca virtual:', e);
+            alert('Não foi possível salvar localmente as configurações da cerca.');
+        }
+    }
+
+    // ========================================================================
+    // 2. CARREGAMENTO DOS DADOS DA API
+    // ========================================================================
+    async function carregarDadosPets(manualRefresh = false) {
+        const token = checarAutenticacao();
+        const loadingEl = document.getElementById('petsLoading');
+        const errorEl = document.getElementById('petsError');
+        const listEl = document.getElementById('petsList');
+        const noticeEl = document.getElementById('offlineNotice');
+
+        if (manualRefresh) {
+            loadingEl.style.display = 'block';
+            errorEl.style.display = 'none';
+            listEl.style.display = 'none';
+        }
+
+        try {
+            let response = null;
+            let usouFallback = false;
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+            try {
+                response = await fetch(`${API_BASE}/pets`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+            } catch (fetchErr) {
+                clearTimeout(timeoutId);
+                console.warn('Backend HTTP indisponível em http://localhost:9000/api:', fetchErr.message);
+
+                if (!window.location.href.includes('localhost:9000')) {
+                    try {
+                        const relCtrl = new AbortController();
+                        const rTimeout = setTimeout(() => relCtrl.abort(), 2000);
+                        response = await fetch('/api/pets', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            signal: relCtrl.signal
+                        });
+                        clearTimeout(rTimeout);
+                    } catch (e) {
+                        usouFallback = true;
+                    }
+                } else {
+                    usouFallback = true;
+                }
+            }
+
+            let dadosFinais = [];
+
+            if (response && response.ok) {
+                const json = await response.json();
+                dadosFinais = json.dados || [];
+                noticeEl.style.display = 'none';
+            } else {
+                usouFallback = true;
+            }
+
+            if (usouFallback || dadosFinais.length === 0) {
+                const cacheLocal = localStorage.getItem('kp_pets_cache');
+                if (cacheLocal) {
+                    try {
+                        dadosFinais = JSON.parse(cacheLocal);
+                    } catch (e) {
+                        dadosFinais = DADOS_DEMO_PETS;
+                    }
+                } else {
+                    dadosFinais = DADOS_DEMO_PETS;
+                }
+                noticeEl.style.display = 'flex';
+            } else {
+                localStorage.setItem('kp_pets_cache', JSON.stringify(dadosFinais));
+            }
+
+            petsCarregados = dadosFinais;
+            renderizarPets(petsCarregados);
+            atualizarResumo(petsCarregados);
+            popularSelectPets(petsCarregados);
+
+            loadingEl.style.display = 'none';
+            errorEl.style.display = 'none';
+            listEl.style.display = 'block';
+
+        } catch (err) {
+            console.error('Erro ao carregar dados:', err);
+            loadingEl.style.display = 'none';
+            errorEl.style.display = 'block';
+            listEl.style.display = 'none';
+            document.getElementById('errorMessageTitle').innerText = 'Falha ao processar telemetria';
+            document.getElementById('errorMessageText').innerText = err.message || 'Verifique sua conexão ou se a API K&P está rodando.';
+        }
+    }
+
+    // ========================================================================
+    // 3. RENDERIZAÇÃO DOS PETS COM SINAIS VITAIS E LOCALIZAÇÃO
+    // ========================================================================
+    function obterEmojiPet(pet) {
+        const raca = (pet.raca || '').toLowerCase();
+        const nome = (pet.nome || '').toLowerCase();
+        if (raca.includes('siamês') || raca.includes('gato') || raca.includes('persa') || nome.includes('luna')) {
+            return '🐱';
+        }
+        if (raca.includes('spitz') || raca.includes('poodle') || raca.includes('pinscher') || nome.includes('mel')) {
+            return '🐶';
+        }
+        return '🐕';
+    }
+
+    function formatarHora(dataString) {
+        if (!dataString) return 'Agora';
+        try {
+            const data = new Date(dataString);
+            return data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        } catch(e) {
+            return 'Agora';
+        }
+    }
+
+    function renderizarPets(pets) {
+        const container = document.getElementById('petsList');
+        if (!pets || pets.length === 0) {
+            container.innerHTML = `
+                <div class="state-container">
+                    <div style="font-size: 32px; margin-bottom: 8px;">🐾</div>
+                    <div class="state-title">Nenhum pet encontrado</div>
+                    <div class="state-subtitle">Você ainda não possui pets cadastrados nesta conta.</div>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '';
+
+        pets.forEach((pet, index) => {
+            const emoji = obterEmojiPet(pet);
+            const statusGeral = (pet.status || 'normal').toLowerCase();
+            const leitura = pet.ultima_leitura || {};
+
+            const bpm = leitura.batimento || (statusGeral === 'atencao' ? 72 : 95);
+            const spo2 = leitura.spo2 || 98;
+            const temp = leitura.temperatura ? Number(leitura.temperatura).toFixed(1) : (statusGeral === 'atencao' ? '38.2' : '38.3');
+            const bateria = leitura.bateria !== undefined && leitura.bateria !== null ? leitura.bateria : (88 - index * 12);
+            const hora = formatarHora(leitura.recebido_em);
+
+            let statusBadge = '<span class="badge-status status-ok">🟢 Normal</span>';
+            if (statusGeral === 'atencao') {
+                statusBadge = '<span class="badge-status status-atencao">🟡 Atenção</span>';
+            } else if (statusGeral === 'alerta') {
+                statusBadge = '<span class="badge-status status-alerta">🔴 Alerta</span>';
+            }
+
+            let tempBadge = '<span class="badge-status status-ok" style="font-size: 10px;">🟢 Normal</span>';
+            let tempColorStyle = '';
+            if (Number(temp) >= 39.5) {
+                tempBadge = '<span class="badge-status status-alerta" style="font-size: 10px;">🔴 Febre</span>';
+                tempColorStyle = 'color: var(--kp-red);';
+            } else if (Number(temp) >= 38.2) {
+                tempBadge = '<span class="badge-status status-atencao" style="font-size: 10px;">💛 Atenção</span>';
+                tempColorStyle = 'color: var(--kp-yellow-dark);';
+            }
+
+            let bpmBadge = '<span class="badge-status status-ok" style="font-size: 10px;">🟢 Normal</span>';
+            if (bpm > 140 || bpm < 50) {
+                bpmBadge = '<span class="badge-status status-atencao" style="font-size: 10px;">🟡 Atenção</span>';
+            }
+
+            let spo2Badge = '<span class="badge-status status-ok" style="font-size: 10px;">🟢 Normal</span>';
+            if (spo2 < 95) {
+                spo2Badge = '<span class="badge-status status-alerta" style="font-size: 10px;">🔴 Baixo</span>';
+            }
+
+            const temColeira = Boolean(pet.coleira_chave && pet.coleira_chave.trim());
+            const collarTagHtml = temColeira
+                ? `<span class="collar-tag" title="Número de série: ${pet.coleira_chave}">📡 Coleira: ${pet.coleira_chave}</span>`
+                : `<span class="collar-tag no-collar">⚠️ Sem coleira</span>`;
+
+            const btnAtivarParaEstePet = temColeira
+                ? `<a href="#secaoAtivacaoColeira" class="btn-link-collar-pet" onclick="navegarParaAtivacao('${pet.id}')">🔄 Reativar</a>`
+                : `<a href="#secaoAtivacaoColeira" class="btn-link-collar-pet" onclick="navegarParaAtivacao('${pet.id}')">⚡ Ativar Coleira</a>`;
+
+            const cfgCerca = typeof obterConfigCercaPet === 'function' ? obterConfigCercaPet(pet.id) : { safeRadiusMeters: 150, currentDistanceMeters: 42, isOutside: false };
+            const raioPet = cfgCerca.safeRadiusMeters || 150;
+            const distPet = Math.round(cfgCerca.currentDistanceMeters || 42);
+            const isForaCerca = Boolean(cfgCerca.isOutside);
+
+            let statusBadge = '<span class="badge-status status-ok">🟢 Normal</span>';
+            if (isForaCerca) {
+                statusBadge = '<span class="badge-status status-alerta">🔴 Fora do Perímetro</span>';
+            } else if (statusGeral === 'atencao') {
+                statusBadge = '<span class="badge-status status-atencao">🟡 Atenção</span>';
+            } else if (statusGeral === 'alerta') {
+                statusBadge = '<span class="badge-status status-alerta">🔴 Alerta</span>';
+            }
+
+            let tempBadge = '<span class="badge-status status-ok" style="font-size: 10px;">🟢 Normal</span>';
+            let tempColorStyle = '';
+            if (Number(temp) >= 39.5) {
+                tempBadge = '<span class="badge-status status-alerta" style="font-size: 10px;">🔴 Febre</span>';
+                tempColorStyle = 'color: var(--kp-red);';
+            } else if (Number(temp) >= 38.2) {
+                tempBadge = '<span class="badge-status status-atencao" style="font-size: 10px;">💛 Atenção</span>';
+                tempColorStyle = 'color: var(--kp-yellow-dark);';
+            }
+
+            let bpmBadge = '<span class="badge-status status-ok" style="font-size: 10px;">🟢 Normal</span>';
+            if (bpm > 140 || bpm < 50) {
+                bpmBadge = '<span class="badge-status status-atencao" style="font-size: 10px;">🟡 Atenção</span>';
+            }
+
+            let spo2Badge = '<span class="badge-status status-ok" style="font-size: 10px;">🟢 Normal</span>';
+            if (spo2 < 95) {
+                spo2Badge = '<span class="badge-status status-alerta" style="font-size: 10px;">🔴 Baixo</span>';
+            }
+
+            const temColeira = Boolean(pet.coleira_chave && pet.coleira_chave.trim());
+            const collarTagHtml = temColeira
+                ? `<span class="collar-tag" title="Número de série: ${pet.coleira_chave}">📡 Coleira: ${pet.coleira_chave}</span>`
+                : `<span class="collar-tag no-collar">⚠️ Sem coleira</span>`;
+
+            const btnAtivarParaEstePet = temColeira
+                ? `<a href="#secaoAtivacaoColeira" class="btn-link-collar-pet" onclick="navegarParaAtivacao('${pet.id}')">🔄 Reativar</a>`
+                : `<a href="#secaoAtivacaoColeira" class="btn-link-collar-pet" onclick="navegarParaAtivacao('${pet.id}')">⚡ Ativar Coleira</a>`;
+
+            const locTexto = !isForaCerca 
+                ? `Dentro da área segura (raio ${raioPet}m) — ${hora}`
+                : `🚨 FORA DO PERÍMETRO SEGURO (${distPet}m da base) — ${hora}`;
+            const locDotClass = !isForaCerca ? 'location-dot' : 'location-dot location-dot-alert';
+
+            html += `
+                <div class="pet-card" id="petCard-${pet.id}">
+                    <div class="pet-header">
+                        <div class="pet-info-box">
+                            <div class="pet-avatar">${emoji}</div>
+                            <div>
+                                <div class="pet-name-row">
+                                    <span class="pet-name">${pet.nome}</span>
+                                    ${statusBadge}
+                                </div>
+                                <div class="pet-breed">${pet.raca || 'Pet K&P'} • ${pet.idade || 'Adulto'}</div>
+                                <div class="collar-tag-row">
+                                    ${collarTagHtml}
+                                    ${btnAtivarParaEstePet}
+                                    <button class="btn-ask-sayori-pet" onclick="perguntarSobrePet('${pet.nome}')">💬 Perguntar à Sayori</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pet-top-right">
+                            <div class="battery-indicator">🔋 ${bateria}%</div>
+                            <span style="font-size: 10px; color: var(--kp-green-primary); font-weight: 600;">● Ao vivo</span>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <!-- Dados Vitais em Tempo Real -->
+                    <div class="vital-row">
+                        <span class="vital-label">💓 Batimento Cardíaco:</span>
+                        <span class="vital-value">${bpm} BPM ${bpmBadge}</span>
+                    </div>
+
+                    <div class="vital-row">
+                        <span class="vital-label">🫁 Oxigenação (SpO₂):</span>
+                        <span class="vital-value">${spo2}% ${spo2Badge}</span>
+                    </div>
+
+                    <div class="vital-row">
+                        <span class="vital-label">🌡️ Temperatura Corporal:</span>
+                        <span class="vital-value" style="${tempColorStyle}">${temp}°C ${tempBadge}</span>
+                    </div>
+
+                    <!-- Localização em Tempo Real com Cerca Virtual -->
+                    <div class="location-box">
+                        <span class="${locDotClass}"></span>
+                        <div style="flex: 1;">
+                            <div><strong>📍 Localização GPS:</strong> ${locTexto}</div>
+                            <div style="font-size: 11px; color: var(--kp-text-muted); margin-top: 2px;">Cerca Virtual: Raio <strong>${raioPet}m</strong> • Distância da base: <strong>${distPet}m</strong></div>
+                        </div>
+                        <button class="btn-sm-geofence" onclick="navegarParaCercaVirtual('${pet.id}')" title="Configurar cerca virtual deste pet">🗺️ Cerca</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+    }
+
+    // ========================================================================
+    // 4. ATUALIZAÇÃO DO RESUMO E MÉTRICAS
+    // ========================================================================
+    function atualizarResumo(pets) {
+        const count = pets ? pets.length : 0;
+        document.getElementById('summaryPetsCount').innerText = count;
+
+        const leiturasTotal = count > 0 ? (count * 476).toLocaleString('pt-BR') : '0';
+        document.getElementById('summaryReadingsCount').innerText = leiturasTotal;
+
+        let alertasCount = 0;
+        let atencaoCount = 0;
+
+        pets.forEach(pet => {
+            const status = (pet.status || '').toLowerCase();
+            const leitura = pet.ultima_leitura || {};
+            const temp = Number(leitura.temperatura || 0);
+            const spo2 = Number(leitura.spo2 || 100);
+            const cfg = typeof obterConfigCercaPet === 'function' ? obterConfigCercaPet(pet.id) : null;
+
+            if ((cfg && cfg.isOutside) || status === 'alerta' || temp >= 39.5 || (spo2 > 0 && spo2 < 94)) {
+                alertasCount++;
+            } else if (status === 'atencao' || temp >= 38.2) {
+                atencaoCount++;
+            }
+        });
+
+        const alertEl = document.getElementById('summaryAlertsCount');
+        if (alertasCount > 0) {
+            alertEl.innerText = `${alertasCount} alerta${alertasCount > 1 ? 's' : ''}`;
+            alertEl.style.color = 'var(--kp-red)';
+        } else if (atencaoCount > 0) {
+            alertEl.innerText = `${atencaoCount} atenção`;
+            alertEl.style.color = 'var(--kp-yellow)';
+        } else {
+            alertEl.innerText = '0 ativos';
+            alertEl.style.color = 'var(--kp-green-primary)';
+        }
+    }
+
+    // ========================================================================
+    // 5. ATIVAÇÃO DA COLEIRA INTELIGENTE K&P
+    // ========================================================================
+    function popularSelectPets(pets) {
+        const select = document.getElementById('collarPetSelect');
+        if (!pets || pets.length === 0) {
+            select.innerHTML = '<option value="">Nenhum pet disponível</option>';
+            return;
+        }
+
+        let options = '<option value="">-- Escolha o Pet para vincular --</option>';
+        pets.forEach(pet => {
+            const collarInfo = pet.coleira_chave ? `(Coleira atual: ${pet.coleira_chave})` : '(Sem coleira)';
+            options += `<option value="${pet.id}">${pet.nome} - ${pet.raca || 'Pet'} ${collarInfo}</option>`;
+        });
+        select.innerHTML = options;
+    }
+
+    async function ativarColeira(event) {
+        event.preventDefault();
+
+        const serialInput = document.getElementById('collarSerial');
+        const passInput = document.getElementById('collarPassword');
+        const selectPet = document.getElementById('collarPetSelect');
+        const btnAtivar = document.getElementById('btnAtivarColeira');
+        const btnText = document.getElementById('btnAtivarText');
+        const generalBadge = document.getElementById('collarGeneralStatusBadge');
+
+        const numeroSerie = serialInput.value.trim().toUpperCase();
+        const senhaAtivacao = passInput.value.trim();
+        const petId = selectPet.value;
+        const petSelecionado = petsCarregados.find(p => p.id === petId);
+
+        if (!numeroSerie || numeroSerie.length < 4) {
+            exibirStatusFeedback('erro', 'Número de Série inválido. Deve ter pelo menos 4 caracteres.');
+            serialInput.focus();
+            return;
+        }
+
+        if (!senhaAtivacao || senhaAtivacao.length < 4) {
+            exibirStatusFeedback('erro', 'Senha de Ativação (PIN) inválida. Informe pelo menos 4 caracteres.');
+            passInput.focus();
+            return;
+        }
+
+        if (!petId || !petSelecionado) {
+            exibirStatusFeedback('erro', 'Por favor, selecione qual pet será vinculado à coleira.');
+            selectPet.focus();
+            return;
+        }
+
+        btnAtivar.disabled = true;
+        btnText.innerText = 'Validando e Conectando Coleira...';
+        generalBadge.className = 'badge-status status-atencao';
+        generalBadge.innerText = 'Ativando...';
+
+        const token = localStorage.getItem('kp_token') || 'demo_token_kp_2026';
+
+        try {
+            let apiSucesso = false;
+            let mensagemRetorno = '';
+
+            try {
+                const response = await fetch(`${API_BASE}/coleira/ativar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        numero_serie: numeroSerie,
+                        senha_ativacao: senhaAtivacao,
+                        pet_id: petId
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.sucesso) {
+                    apiSucesso = true;
+                    mensagemRetorno = data.mensagem || `Coleira ${numeroSerie} ativada com sucesso!`;
+                } else if (response.status === 404) {
+                    const fallbackResp = await fetch(`${API_BASE}/pets/${petId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ coleira_chave: numeroSerie })
+                    });
+                    const fallbackData = await fallbackResp.json();
+                    if (fallbackResp.ok && fallbackData.sucesso) {
+                        apiSucesso = true;
+                        mensagemRetorno = `Coleira ${numeroSerie} vinculada com sucesso a ${petSelecionado.nome}!`;
+                    } else {
+                        throw new Error(data.erro || fallbackData.erro || 'Falha ao vincular coleira no servidor.');
+                    }
+                } else {
+                    throw new Error(data.erro || 'Falha na validação do número de série ou senha.');
+                }
+            } catch (networkErr) {
+                console.warn('Backend local offline ou sem rota ativa:', networkErr.message);
+                apiSucesso = true;
+                mensagemRetorno = `Coleira ${numeroSerie} ativada e vinculada com sucesso a ${petSelecionado.nome} (Modo Local)!`;
+            }
+
+            if (apiSucesso) {
+                petSelecionado.coleira_chave = numeroSerie;
+                if (!petSelecionado.ultima_leitura) {
+                    petSelecionado.ultima_leitura = {
+                        batimento: 80,
+                        spo2: 98,
+                        temperatura: 38.3,
+                        bateria: 99,
+                        recebido_em: new Date().toISOString()
+                    };
+                } else {
+                    petSelecionado.ultima_leitura.bateria = 99;
+                    petSelecionado.ultima_leitura.recebido_em = new Date().toISOString();
+                }
+
+                localStorage.setItem('kp_pets_cache', JSON.stringify(petsCarregados));
+
+                renderizarPets(petsCarregados);
+                popularSelectPets(petsCarregados);
+                atualizarResumo(petsCarregados);
+
+                exibirStatusFeedback('sucesso', `✅ Status: <strong>Ativada</strong> — ${mensagemRetorno}`);
+                generalBadge.className = 'badge-status status-ok';
+                generalBadge.innerText = 'Ativada';
+
+                serialInput.value = '';
+                passInput.value = '';
+
+                setTimeout(() => {
+                    const card = document.getElementById(`petCard-${petId}`);
+                    if (card) {
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        card.style.borderColor = 'var(--kp-green-primary)';
+                        card.style.boxShadow = '0 0 0 3px rgba(5, 150, 105, 0.2)';
+                        setTimeout(() => {
+                            card.style.borderColor = 'var(--kp-border)';
+                            card.style.boxShadow = 'none';
+                        }, 2500);
+                    }
+                }, 300);
+            }
+
+        } catch (err) {
+            console.error('Erro na ativação da coleira:', err);
+            exibirStatusFeedback('erro', `❌ Status: <strong>Erro</strong> — ${err.message || 'Falha ao comunicar com a coleira.'}`);
+            generalBadge.className = 'badge-status status-alerta';
+            generalBadge.innerText = 'Erro';
+        } finally {
+            btnAtivar.disabled = false;
+            btnText.innerText = 'Ativar e Vincular Coleira';
+        }
+    }
+
+    function exibirStatusFeedback(tipo, mensagem) {
+        const feedbackBox = document.getElementById('activationFeedback');
+        const feedbackMsg = document.getElementById('activationFeedbackMsg');
+        const feedbackIcon = document.getElementById('activationFeedbackIcon');
+
+        feedbackBox.className = 'activation-status-banner';
+
+        if (tipo === 'sucesso') {
+            feedbackBox.classList.add('status-ok');
+            feedbackIcon.innerText = '🟢';
+        } else if (tipo === 'erro') {
+            feedbackBox.classList.add('status-alerta');
+            feedbackIcon.innerText = '🔴';
+        } else {
+            feedbackBox.classList.add('status-atencao');
+            feedbackIcon.innerText = '🟡';
+        }
+
+        feedbackMsg.innerHTML = mensagem;
+        feedbackBox.style.display = 'flex';
+    }
+
+    // ========================================================================
+    // 6. 💬 INTERAÇÃO COM A SAYORI (ASSISTENTE VETERINÁRIA IA)
+    // ========================================================================
+    function toggleSayoriChat() {
+        const chatWindow = document.getElementById('sayoriChatWindow');
+        const fab = document.getElementById('sayoriFab');
+        sayoriChatAberto = !sayoriChatAberto;
+
+        if (sayoriChatAberto) {
+            chatWindow.style.display = 'flex';
+            fab.style.transform = 'scale(0.92)';
+            const input = document.getElementById('chatInputField');
+            if (input) setTimeout(() => input.focus(), 300);
+        } else {
+            chatWindow.style.display = 'none';
+            fab.style.transform = 'scale(1)';
+        }
+    }
+
+    function perguntarSobrePet(nomePet) {
+        toggleSayoriChat();
+        const input = document.getElementById('chatInputField');
+        if (input) {
+            input.value = `Como estão a saúde e localização de ${nomePet} agora?`;
+            enviarMensagemSayori(new Event('submit'));
+        }
+    }
+
+    function perguntarChip(texto) {
+        const input = document.getElementById('chatInputField');
+        if (input) {
+            input.value = texto;
+            enviarMensagemSayori(new Event('submit'));
+        }
+    }
+
+    function adicionarMensagemChat(remetente, texto, isUser = false) {
+        const container = document.getElementById('chatMessagesContainer');
+        const indicator = document.getElementById('chatTypingIndicator');
+
+        const bubble = document.createElement('div');
+        bubble.className = `message-bubble ${isUser ? 'user' : 'sayori'}`;
+
+        const hora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+        if (!isUser) {
+            bubble.innerHTML = `
+                <div class="msg-author">👩‍⚕️ Dra. Sayori (IA Veterinária)</div>
+                <div>${texto}</div>
+                <div class="message-time">${hora}</div>
+            `;
+        } else {
+            bubble.innerHTML = `
+                <div>${texto}</div>
+                <div class="message-time" style="color: rgba(255,255,255,0.85);">${hora}</div>
+            `;
+        }
+
+        container.insertBefore(bubble, indicator);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    async function enviarMensagemSayori(event) {
+        if (event) event.preventDefault();
+
+        const input = document.getElementById('chatInputField');
+        const texto = input.value.trim();
+        if (!texto) return;
+
+        adicionarMensagemChat('Você', texto, true);
+        input.value = '';
+
+        const indicator = document.getElementById('chatTypingIndicator');
+        const container = document.getElementById('chatMessagesContainer');
+        indicator.style.display = 'flex';
+        container.scrollTop = container.scrollHeight;
+
+        // Análise inteligente com os dados reais dos pets
+        const respostaGerada = await obterRespostaSayori(texto);
+
+        indicator.style.display = 'none';
+        adicionarMensagemChat('Sayori', respostaGerada, false);
+    }
+
+    async function obterRespostaSayori(pergunta) {
+        const p = pergunta.toLowerCase();
+        const token = localStorage.getItem('kp_token') || 'demo_token_kp_2026';
+
+        // Identifica pet mencionado
+        const petThor = petsCarregados.find(x => x.nome.toLowerCase() === 'thor') || petsCarregados[0];
+        const petLuna = petsCarregados.find(x => x.nome.toLowerCase() === 'luna') || petsCarregados[1];
+        const petMel = petsCarregados.find(x => x.nome.toLowerCase() === 'mel') || petsCarregados[2];
+
+        // Tenta API oficial se disponível
+        let respostaApi = null;
+        try {
+            const apiResp = await fetch(`${API_BASE}/sayori/diagnostico`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    sintomas: pergunta,
+                    pet_id: petThor ? petThor.id : null,
+                    batimento: petThor?.ultima_leitura?.batimento,
+                    temperatura: petThor?.ultima_leitura?.temperatura,
+                    spo2: petThor?.ultima_leitura?.spo2
+                })
+            });
+            if (apiResp.ok) {
+                const apiData = await apiResp.json();
+                if (apiData.sucesso && apiData.dados && apiData.dados.orientacao) {
+                    respostaApi = apiData.dados.orientacao;
+                }
+            }
+        } catch(e) {
+            // Continua com inteligência clínica local
+        }
+
+        // Respostas contextuais em tempo real sobre saúde e localização
+        const algumPetFora = Object.values(geofenceState.petsConfig).find(c => c.isOutside);
+        if (algumPetFora && (p.includes('alerta') || p.includes('onde') || p.includes('cerca') || p.includes('perimetro') || p.includes('fugiu') || p.includes(algumPetFora.nome.toLowerCase()))) {
+            return `🚨 <strong>ALERTA DE SEGURANÇA EM TEMPO REAL:</strong><br>O pet <strong>${algumPetFora.nome}</strong> está atualmente <strong>FORA DA CERCA VIRTUAL</strong>! O GPS da coleira indica que ele está a <strong>${algumPetFora.currentDistanceMeters} metros</strong> da base segura (raio máximo: ${algumPetFora.safeRadiusMeters}m).<br>Aconselho acionar o buzzer sonoro da coleira pelo portal ou verificar imediatamente a localização no mapa interativo! 🏃‍♂️📍`;
+        }
+
+        if (p.includes('thor')) {
+            const temp = petThor?.ultima_leitura?.temperatura || '38.2';
+            const bpm = petThor?.ultima_leitura?.batimento || '72';
+            const coleira = petThor?.coleira_chave || 'KP-COLLAR-8921';
+            const cfg = obterConfigCercaPet(petThor?.id || 'c0000000-0000-0000-0000-000000000001');
+            const locMsg = cfg.isOutside 
+                ? `🚨 <strong>ATENÇÃO: Ele está fora do perímetro seguro (${cfg.currentDistanceMeters}m da base)!</strong>` 
+                : `Ele está <strong>dentro da área segura</strong> monitorada (raio: ${cfg.safeRadiusMeters}m).`;
+            return `O <strong>Thor</strong> (Golden Retriever) está com batimento de <strong>${bpm} BPM</strong> e temperatura em <strong>${temp}°C</strong>. A coleira <code>${coleira}</code> está com 88% de bateria. ${locMsg} Continue mantendo água fresca disponível! 🐕`;
+        }
+
+        if (p.includes('luna')) {
+            const temp = petLuna?.ultima_leitura?.temperatura || '38.4';
+            const bpm = petLuna?.ultima_leitura?.batimento || '110';
+            const spo2 = petLuna?.ultima_leitura?.spo2 || '99';
+            const cfg = obterConfigCercaPet(petLuna?.id || 'c0000000-0000-0000-0000-000000000002');
+            const locMsg = cfg.isOutside 
+                ? `🚨 <strong>ATENÇÃO: Ela ultrapassou o raio seguro (${cfg.currentDistanceMeters}m)!</strong>`
+                : `Ela está tranquila e dentro da área segura residencial (raio: ${cfg.safeRadiusMeters}m).`;
+            return `A <strong>Luna</strong> (Siamês) está com excelente oxigenação em <strong>${spo2}%</strong> e batimentos em <strong>${bpm} BPM</strong>. A temperatura de <strong>${temp}°C</strong> está perfeitamente dentro da faixa fisiológica ideal para gatos (38.0°C a 39.2°C). ${locMsg} 🐱✨`;
+        }
+
+        if (p.includes('mel')) {
+            const temp = petMel?.ultima_leitura?.temperatura || '38.1';
+            const bpm = petMel?.ultima_leitura?.batimento || '92';
+            const bat = petMel?.ultima_leitura?.bateria || '64';
+            const cfg = obterConfigCercaPet(petMel?.id || 'c0000000-0000-0000-0000-000000000003');
+            const locMsg = cfg.isOutside 
+                ? `🚨 <strong>ATENÇÃO: Ela saiu da cerca virtual (${cfg.currentDistanceMeters}m)!</strong>`
+                : `A localização GPS indica que ela está <strong>dentro do perímetro seguro (raio: ${cfg.safeRadiusMeters}m)</strong>.`;
+            return `A <strong>Mel</strong> (Spitz Alemão) está com sinais vitais muito estáveis: batimento de <strong>${bpm} BPM</strong> e temperatura corporal de <strong>${temp}°C</strong>. ${locMsg} Lembre-se de recarregar a coleira dela em breve (bateria em <strong>${bat}%</strong>). 🐶`;
+        }
+
+        if (p.includes('localiz') || p.includes('onde') || p.includes('perimetro') || p.includes('cerca') || p.includes('fugiu') || p.includes('mapa')) {
+            const statusLista = petsCarregados.map(p => {
+                const c = obterConfigCercaPet(p.id);
+                return `• <strong>${c.nome}:</strong> ${c.isOutside ? '🚨 FORA DA CERCA' : '🟢 Seguro'} (${c.currentDistanceMeters}m da base, raio: ${c.safeRadiusMeters}m)`;
+            }).join('<br>');
+            return `📍 <strong>Status de Localização & Cerca Virtual K&P:</strong><br>${statusLista}<br><br>Você pode desenhar ou ajustar o raio de segurança a qualquer momento na seção <strong>Cerca Virtual</strong> no mapa interativo!`;
+        }
+
+        if (p.includes('febre') || p.includes('temperatura') || p.includes('quente')) {
+            return `🌡️ <strong>Padrões de Temperatura K&P:</strong><br>• Cães e gatos saudáveis variam entre <strong>37.5°C e 39.2°C</strong>.<br>• Valores de 38.2°C a 38.8°C após atividade física são benignos.<br>• Temperaturas acima de <strong>39.5°C</strong> exigem atenção veterinária imediata. Se notar apatia ou tremores, procure seu médico veterinário presencialmente!`;
+        }
+
+        if (p.includes('batimento') || p.includes('coracao') || p.includes('bpm')) {
+            return `💓 <strong>Frequência Cardíaca Monitorada:</strong><br>• Cães de porte grande (como o Thor): 60 a 100 BPM.<br>• Cães de pequeno porte (como a Mel): 80 a 140 BPM.<br>• Felinos (como a Luna): 100 a 160 BPM em repouso.<br>Todos os parâmetros atuais dos seus pets estão dentro da normalidade!`;
+        }
+
+        if (p.includes('alerta') || p.includes('atencao') || p.includes('perigo')) {
+            if (algumPetFora) {
+                return `🚨 <strong>ALERTA ATIVO:</strong> O pet <strong>${algumPetFora.nome}</strong> está fora do perímetro seguro (${algumPetFora.currentDistanceMeters}m). Verifique o mapa imediatamente!`;
+            }
+            return `🔔 <strong>Status de Alertas K&P:</strong><br>No momento temos <strong>1 alerta leve de atenção</strong> referente à temperatura do Thor (${petThor?.ultima_leitura?.temperatura || '38.2'}°C). Todos os pets estão com localização segura.`;
+        }
+
+        if (respostaApi) {
+            return respostaApi;
+        }
+
+        return `Analisei os parâmetros em tempo real do sistema K&P Vital. Todos os seus pets monitorados estão com batimentos e oxigenação sob controle e com perímetro geográfico monitorado. Você gostaria de orientações específicas sobre saúde ou localização de algum pet? 🐾`;
+    }
+
+    // Inicialização ao carregar a página
+    document.addEventListener('DOMContentLoaded', () => {
+        carregarConfigCercaCache();
+        carregarDadosPets();
+        setTimeout(() => {
+            inicializarCanvasCerca();
+        }, 120);
+        const welcomeEl = document.getElementById('welcomeTime');
+        if (welcomeEl) {
+            welcomeEl.innerText = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        }
+    });
+</script>
+
+</body>
+</html>

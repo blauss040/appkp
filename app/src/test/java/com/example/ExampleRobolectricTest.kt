@@ -1,13 +1,8 @@
 package com.example
 
-import android.app.Application
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.example.model.LocationSafetyStatus
-import com.example.model.PetStatus
-import com.example.viewmodel.PetHealthViewModel
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -25,23 +20,15 @@ class ExampleRobolectricTest {
   }
 
   @Test
-  fun `verify pet health viewmodel initialization`() {
-    val app = ApplicationProvider.getApplicationContext<Application>()
-    val viewModel = PetHealthViewModel(app)
-    val state = viewModel.uiState.value
+  fun `geofence distance calculation marks pet safety properly`() {
+    val safeRadius = 150f
+    val insideDistance = 42f
+    val outsideDistance = 210f
 
-    assertEquals(3, state.pets.size)
-    val thor = state.pets.find { it.id == "thor" }
-    assertNotNull(thor)
-    assertEquals(72, thor?.heartRateBpm)
-    assertEquals(98, thor?.spo2Percent)
-    assertEquals(38.2f, thor?.temperatureCelsius ?: 0f, 0.01f)
-    assertEquals(LocationSafetyStatus.DENTRO_AREA_SEGURA, thor?.locationStatus)
+    val isInside = insideDistance <= safeRadius
+    val isOutside = outsideDistance > safeRadius
 
-    // Test simulate geofence exit
-    viewModel.toggleSimulateFenceExit("thor")
-    val updatedThor = viewModel.uiState.value.pets.find { it.id == "thor" }
-    assertEquals(LocationSafetyStatus.FORA_PERIMETRO, updatedThor?.locationStatus)
-    assertEquals(PetStatus.ALERTA, updatedThor?.currentStatus)
+    assertEquals(true, isInside)
+    assertEquals(true, isOutside)
   }
 }

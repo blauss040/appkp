@@ -125,7 +125,10 @@ fun MainScreen(
                     },
                     onNavigateToSayori = { currentScreen = NavigationScreen.SAYORI },
                     onDismissAlert = { viewModel.dismissActiveAlert() },
-                    onRefresh = { viewModel.simulateRefresh() }
+                    onRefresh = { viewModel.simulateRefresh() },
+                    onActivateCollar = { petId, serial, pin ->
+                        viewModel.activateCollar(petId, serial, pin)
+                    }
                 )
 
                 NavigationScreen.CHARTS -> ChartsScreen(

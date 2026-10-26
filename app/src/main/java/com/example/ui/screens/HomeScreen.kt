@@ -12,7 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,6 +20,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.model.HealthStatus
@@ -31,6 +33,7 @@ import com.example.ui.components.LocationSafetyBadge
 import com.example.ui.components.PetStatusBadge
 import com.example.ui.theme.*
 import com.example.viewmodel.AppUiState
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -41,16 +44,21 @@ fun HomeScreen(
     onNavigateToSayori: () -> Unit,
     onDismissAlert: () -> Unit,
     onRefresh: () -> Unit,
+    onActivateCollar: (suspend (String, String, String) -> Result<String>)? = null,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
+    Box(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = 20.dp),
-        contentPadding = PaddingValues(top = 16.dp, bottom = 28.dp),
-        verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp),
+            contentPadding = PaddingValues(top = 16.dp, bottom = 88.dp),
+            verticalArrangement = Arrangement.spacedBy(18.dp)
+        ) {
         // 1. Header com Saudação personalizada e status do sistema
         item {
             HomeGreetingHeader(
@@ -81,7 +89,15 @@ fun HomeScreen(
             )
         }
 
-        // 4. Seção: Cards dos Pets
+        // 4. Seção e Formulário de Ativação da Coleira K&P
+        item {
+            CollarActivationSection(
+                pets = uiState.pets,
+                onActivateCollar = onActivateCollar
+            )
+        }
+
+        // 5. Seção: Cards dos Pets
         item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -126,6 +142,36 @@ fun HomeScreen(
         item {
             SayoriQuickBanner(onOpenSayori = onNavigateToSayori)
         }
+    }
+
+    // Bolha Flutuante de Chat da Sayori (Floating Chat Bubble)
+    ExtendedFloatingActionButton(
+        onClick = onNavigateToSayori,
+        modifier = Modifier
+            .align(Alignment.BottomEnd)
+            .padding(end = 16.dp, bottom = 16.dp)
+            .testTag("floating_sayori_chat_fab"),
+        containerColor = KpGreenPrimary,
+        contentColor = Color.White,
+        shape = CircleShape,
+        icon = {
+            Text(text = "👩‍⚕️", fontSize = 20.sp)
+        },
+        text = {
+            Column {
+                Text(
+                    text = "Sayori IA",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp
+                )
+                Text(
+                    text = "Online • Dúvidas",
+                    fontSize = 10.sp,
+                    color = Color.White.copy(alpha = 0.85f)
+                )
+            }
+        }
+    )
     }
 }
 
@@ -352,6 +398,28 @@ private fun PetQuickCard(
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                        Spacer(modifier = Modifier.height(3.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(if (pet.collarId.isNotEmpty()) KpBlueLight else KpSurfaceVariant)
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Sensors,
+                                contentDescription = "Coleira",
+                                tint = if (pet.collarId.isNotEmpty()) KpBlueData else MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(11.dp)
+                            )
+                            Text(
+                                text = if (pet.collarId.isNotEmpty()) "Coleira: ${pet.collarId}" else "Sem coleira",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = if (pet.collarId.isNotEmpty()) KpBlueData else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 }
 
@@ -584,3 +652,328 @@ private fun SayoriQuickBanner(onOpenSayori: () -> Unit) {
         }
     }
 }
+
+enum class CollarStatusState {
+    NOT_ACTIVATED,
+    ACTIVATING,
+    ACTIVATED,
+    ERROR
+}
+
+private data class StatusCardConfig(
+    val bg: Color,
+    val border: Color,
+    val icon: androidx.compose.ui.graphics.vector.ImageVector,
+    val title: String
+)
+
+@Composable
+fun CollarActivationSection(
+    pets: List<Pet>,
+    onActivateCollar: (suspend (String, String, String) -> Result<String>)?,
+    modifier: Modifier = Modifier
+) {
+    var serialNumber by remember { mutableStateOf("") }
+    var activationPassword by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+    var selectedPetId by remember(pets) { mutableStateOf(pets.firstOrNull()?.id ?: "") }
+    var activationStatus by remember { mutableStateOf(CollarStatusState.NOT_ACTIVATED) }
+    var statusMessage by remember { mutableStateOf("Coleira pendente de ativação no sistema.") }
+    val coroutineScope = rememberCoroutineScope()
+    var isSubmitting by remember { mutableStateOf(false) }
+
+    Card(
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        modifier = modifier
+            .fillMaxWidth()
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
+            .testTag("collar_activation_card")
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            // Header da Seção
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .size(38.dp)
+                            .clip(CircleShape)
+                            .background(KpGreenUltralight)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Bolt,
+                            contentDescription = "Ativar Coleira",
+                            tint = KpGreenPrimary,
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
+                    Column {
+                        Text(
+                            text = "Ativação de Coleira K&P",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = "Vincule a coleira inteligente ao seu pet",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                // Badge de Status Geral
+                val (badgeBg, badgeText, badgeColor) = when (activationStatus) {
+                    CollarStatusState.ACTIVATED -> Triple(KpGreenLight, "Ativada", KpGreenDark)
+                    CollarStatusState.ACTIVATING -> Triple(KpYellowLight, "Ativando...", KpYellowAccent)
+                    CollarStatusState.ERROR -> Triple(KpRedLight, "Erro", KpRedDark)
+                    CollarStatusState.NOT_ACTIVATED -> Triple(KpSurfaceVariant, "Não ativada", MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(badgeBg)
+                        .padding(horizontal = 9.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = badgeText,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = badgeColor
+                    )
+                }
+            }
+
+            HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
+
+            // Campo 1: Número de Série
+            OutlinedTextField(
+                value = serialNumber,
+                onValueChange = { serialNumber = it.uppercase() },
+                label = { Text("Número de Série da Coleira") },
+                placeholder = { Text("Ex: KP-COLLAR-8921") },
+                leadingIcon = {
+                    Icon(imageVector = Icons.Default.QrCode, contentDescription = null, tint = KpGreenPrimary)
+                },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("collar_serial_input"),
+                shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = KpGreenPrimary,
+                    focusedLabelColor = KpGreenPrimary
+                )
+            )
+
+            // Campo 2: Senha de Ativação
+            OutlinedTextField(
+                value = activationPassword,
+                onValueChange = { activationPassword = it },
+                label = { Text("Senha de Ativação (PIN)") },
+                placeholder = { Text("Chave de 6 dígitos") },
+                leadingIcon = {
+                    Icon(imageVector = Icons.Default.Lock, contentDescription = null, tint = KpGreenPrimary)
+                },
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                            contentDescription = if (passwordVisible) "Ocultar senha" else "Mostrar senha",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                },
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("collar_password_input"),
+                shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = KpGreenPrimary,
+                    focusedLabelColor = KpGreenPrimary
+                )
+            )
+
+            // Campo 3: Selecionar Pet Vinculado
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(
+                    text = "Selecionar Pet Vinculado:",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    pets.forEach { pet ->
+                        val isSelected = pet.id == selectedPetId
+                        val chipBg = if (isSelected) KpGreenPrimary else MaterialTheme.colorScheme.surfaceVariant
+                        val chipTextColor = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(chipBg)
+                                .clickable { selectedPetId = pet.id }
+                                .padding(vertical = 10.dp, horizontal = 8.dp)
+                                .testTag("select_pet_chip_${pet.id}")
+                        ) {
+                            Text(text = pet.avatarEmoji, fontSize = 16.sp)
+                            Text(
+                                text = pet.name,
+                                fontSize = 12.sp,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                color = chipTextColor
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Botão de Envio para a API
+            Button(
+                onClick = {
+                    if (serialNumber.trim().length < 4) {
+                        activationStatus = CollarStatusState.ERROR
+                        statusMessage = "Informe um Número de Série válido com ao menos 4 caracteres."
+                        return@Button
+                    }
+                    if (activationPassword.trim().length < 4) {
+                        activationStatus = CollarStatusState.ERROR
+                        statusMessage = "A Senha de Ativação deve conter ao menos 4 dígitos."
+                        return@Button
+                    }
+                    if (selectedPetId.isEmpty()) {
+                        activationStatus = CollarStatusState.ERROR
+                        statusMessage = "Selecione o pet que usará esta coleira."
+                        return@Button
+                    }
+
+                    isSubmitting = true
+                    activationStatus = CollarStatusState.ACTIVATING
+                    statusMessage = "Validando e enviando dados para a API K&P..."
+
+                    coroutineScope.launch {
+                        val result = onActivateCollar?.invoke(selectedPetId, serialNumber, activationPassword)
+                            ?: Result.success("Coleira ativada com sucesso!")
+
+                        isSubmitting = false
+                        if (result.isSuccess) {
+                            activationStatus = CollarStatusState.ACTIVATED
+                            statusMessage = result.getOrNull() ?: "Coleira ativada e vinculada com sucesso!"
+                            serialNumber = ""
+                            activationPassword = ""
+                        } else {
+                            activationStatus = CollarStatusState.ERROR
+                            statusMessage = result.exceptionOrNull()?.message ?: "Falha ao ativar coleira."
+                        }
+                    }
+                },
+                enabled = !isSubmitting,
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = KpGreenPrimary,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .testTag("btn_activate_collar")
+            ) {
+                if (isSubmitting) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier.size(20.dp),
+                        strokeWidth = 2.dp
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Conectando à API...", fontWeight = FontWeight.Bold)
+                } else {
+                    Icon(imageVector = Icons.Default.Link, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Ativar e Vincular Coleira", fontWeight = FontWeight.Bold)
+                }
+            }
+
+            // Exibição de Status: Ativada / Não ativada / Erro
+            val config = when (activationStatus) {
+                CollarStatusState.ACTIVATED -> StatusCardConfig(
+                    KpGreenLight,
+                    KpGreenAccent,
+                    Icons.Default.CheckCircle,
+                    "Status: Ativada"
+                )
+                CollarStatusState.ERROR -> StatusCardConfig(
+                    KpRedLight,
+                    KpRedAlert,
+                    Icons.Default.Error,
+                    "Status: Erro"
+                )
+                CollarStatusState.ACTIVATING -> StatusCardConfig(
+                    KpYellowLight,
+                    KpYellowWarning,
+                    Icons.Default.HourglassTop,
+                    "Status: Processando"
+                )
+                CollarStatusState.NOT_ACTIVATED -> StatusCardConfig(
+                    MaterialTheme.colorScheme.surfaceVariant,
+                    MaterialTheme.colorScheme.outline,
+                    Icons.Default.Info,
+                    "Status: Não ativada"
+                )
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(config.bg)
+                    .border(1.dp, config.border, RoundedCornerShape(12.dp))
+                    .padding(12.dp)
+                    .testTag("activation_status_feedback")
+            ) {
+                Icon(
+                    imageVector = config.icon,
+                    contentDescription = null,
+                    tint = config.border,
+                    modifier = Modifier.size(20.dp)
+                )
+                Column {
+                    Text(
+                        text = config.title,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = statusMessage,
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+    }
+}
+

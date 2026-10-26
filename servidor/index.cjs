@@ -357,6 +357,88 @@ app.get('/api/coleira/ultimo/:petId', autenticarToken, async (req, res) => {
     }
 });
 
+/**
+ * POST /api/coleira/ativar
+ * Ativa uma coleira inteligente K&P com número de série e senha,
+ * vinculando-a ao pet especificado.
+ */
+app.post('/api/coleira/ativar', autenticarToken, async (req, res) => {
+    try {
+        const { numero_serie, senha_ativacao, pet_id } = req.body;
+        const usuarioId = req.usuario.id;
+
+        if (!numero_serie || !numero_serie.trim()) {
+            return res.status(400).json({
+                sucesso: false,
+                erro: 'Número de série da coleira é obrigatório.'
+            });
+        }
+
+        if (!senha_ativacao || !senha_ativacao.trim()) {
+            return res.status(400).json({
+                sucesso: false,
+                erro: 'Senha de ativação da coleira é obrigatória.'
+            });
+        }
+
+        if (!pet_id) {
+            return res.status(400).json({
+                sucesso: false,
+                erro: 'Selecione um pet para vincular a coleira.'
+            });
+        }
+
+        const petBusca = await db.query(
+            'SELECT id, nome, raca, coleira_chave FROM pets WHERE id = $1 AND tutor_id = $2',
+            [pet_id, usuarioId]
+        );
+
+        if (petBusca.rows.length === 0) {
+            return res.status(404).json({
+                sucesso: false,
+                erro: 'Pet não encontrado ou permissão insuficiente para vincular coleira.'
+            });
+        }
+
+        const pet = petBusca.rows[0];
+        const serieLimpo = numero_serie.trim().toUpperCase();
+
+        const coleiraEmUso = await db.query(
+            'SELECT id, nome FROM pets WHERE coleira_chave = $1 AND id <> $2',
+            [serieLimpo, pet_id]
+        );
+
+        if (coleiraEmUso.rows.length > 0) {
+            return res.status(409).json({
+                sucesso: false,
+                erro: `A coleira ${serieLimpo} já está vinculada ao pet "${coleiraEmUso.rows[0].nome}". Desvincule antes de associar.`
+            });
+        }
+
+        const resultado = await db.query(
+            'UPDATE pets SET coleira_chave = $1 WHERE id = $2 RETURNING *',
+            [serieLimpo, pet_id]
+        );
+
+        res.json({
+            sucesso: true,
+            mensagem: `Coleira ${serieLimpo} ativada com sucesso e vinculada a ${pet.nome}!`,
+            dados: {
+                pet: resultado.rows[0],
+                status: 'Ativada',
+                numero_serie: serieLimpo,
+                ativada_em: new Date().toISOString()
+            }
+        });
+    } catch (err) {
+        console.error('Erro ao ativar coleira:', err);
+        res.status(500).json({
+            sucesso: false,
+            erro: 'Erro interno ao processar ativação da coleira.'
+        });
+    }
+});
+
 // ----------------------------------------------------------------------------
 // 3. ROTAS DE GESTÃO DE PETS
 // ----------------------------------------------------------------------------

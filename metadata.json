@@ -1,7 +1,6 @@
 {
   "name": "K&P Saúde Animal",
-  "description": "Monitoramento inteligente de saúde, sinais vitais e localização em tempo real para pets com cerca virtual e assistente Sayori.",
+  "description": "Monitoramento inteligente de saúde, sinais vitais e localização em tempo real para pets com cerca virtual, coleira inteligente e assistente Sayori.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
-

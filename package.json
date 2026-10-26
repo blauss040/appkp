@@ -1,0 +1,19 @@
+{
+  "name": "appkp-saude-animal",
+  "version": "2.0.0",
+  "description": "K&P Saúde Animal — Monitoramento Inteligente de Pets",
+  "main": "server/index.cjs",
+  "scripts": {
+    "start": "node server/index.cjs",
+    "dev": "node --watch server/index.cjs"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "jsonwebtoken": "^9.0.2",
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

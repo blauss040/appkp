@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K&P Saúde Animal — Login</title>
+    <style>
+        :root {
+            --kp-green-primary: #059669;
+            --kp-green-accent: #10B981;
+            --kp-green-light: #ECFDF5;
+            --kp-yellow: #F59E0B;
+            --kp-blue: #0284C7;
+            --kp-bg: #F8FAFC;
+            --kp-surface: #FFFFFF;
+            --kp-text: #0F172A;
+            --kp-text-muted: #64748B;
+            --kp-border: #E2E8F0;
+            --kp-red: #EF4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--kp-bg);
+            color: var(--kp-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--kp-surface);
+            border: 1px solid var(--kp-border);
+            border-radius: 24px;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
+            width: 100%;
+            max-width: 420px;
+            padding: 40px 32px;
+            text-align: center;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--kp-green-light);
+            color: var(--kp-green-primary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .brand-logo {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--kp-text);
+            margin-bottom: 8px;
+        }
+
+        p.subtitle {
+            color: var(--kp-text-muted);
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--kp-text);
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid var(--kp-border);
+            border-radius: 12px;
+            font-size: 14px;
+            color: var(--kp-text);
+            background: #FBFDFF;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--kp-green-primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: var(--kp-green-primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background: #047857;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.99);
+        }
+
+        .alert-box {
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 18px;
+            display: none;
+            text-align: left;
+        }
+
+        .alert-error {
+            background: #FEE2E2;
+            color: #B91C1C;
+            border: 1px solid #FCA5A5;
+        }
+
+        .alert-success {
+            background: var(--kp-green-light);
+            color: #065F46;
+            border: 1px solid #A7F3D0;
+        }
+
+        .demo-credentials {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px dashed var(--kp-border);
+            font-size: 12px;
+            color: var(--kp-text-muted);
+            line-height: 1.6;
+        }
+
+        .demo-link {
+            color: var(--kp-green-primary);
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <div class="brand-badge">🐾 Saúde & Localização Inteligente</div>
+    <div class="brand-logo">🐕‍🦺</div>
+    <h1>K&P Saúde Animal</h1>
+    <p class="subtitle">Acesse o portal para acompanhar seus pets em tempo real</p>
+
+    <div id="alertBox" class="alert-box"></div>
+
+    <form id="loginForm" onsubmit="realizarLogin(event)">
+        <div class="form-group">
+            <label for="email">E-mail do Tutor</label>
+            <input type="email" id="email" required placeholder="seu.email@exemplo.com" value="amanda.silva@email.com">
+        </div>
+
+        <div class="form-group">
+            <label for="senha">Senha de Acesso</label>
+            <input type="password" id="senha" required placeholder="••••••••" value="tutor123">
+        </div>
+
+        <button type="submit" id="btnSubmit" class="btn-primary">Entrar no Sistema</button>
+    </form>
+
+    <div class="demo-credentials">
+        <strong>Credenciais padrão do banco:</strong><br>
+        Tutor: <span class="demo-link" onclick="preencherDemo('amanda.silva@email.com', 'tutor123')">amanda.silva@email.com (tutor123)</span><br>
+        Admin: <span class="demo-link" onclick="preencherDemo('admin@kpsaudeanimal.com.br', 'admin123')">admin@kpsaudeanimal.com.br (admin123)</span>
+    </div>
+</div>
+
+<script>
+    function preencherDemo(email, senha) {
+        document.getElementById('email').value = email;
+        document.getElementById('senha').value = senha;
+    }
+
+    async function realizarLogin(e) {
+        e.preventDefault();
+        const alertBox = document.getElementById('alertBox');
+        const btnSubmit = document.getElementById('btnSubmit');
+        const email = document.getElementById('email').value.trim();
+        const senha = document.getElementById('senha').value;
+
+        alertBox.style.display = 'none';
+        btnSubmit.disabled = true;
+        btnSubmit.innerText = 'Autenticando...';
+
+        try {
+            const resposta = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, senha })
+            });
+
+            const dados = await resposta.json();
+
+            if (dados.sucesso) {
+                // Salva token e dados do usuário no localStorage
+                localStorage.setItem('kp_token', dados.dados.token);
+                localStorage.setItem('kp_usuario', JSON.stringify(dados.dados.usuario));
+                
+                alertBox.className = 'alert-box alert-success';
+                alertBox.innerText = 'Login aprovado! Redirecionando...';
+                alertBox.style.display = 'block';
+
+                setTimeout(() => {
+                    window.location.href = 'principal.html';
+                }, 800);
+            } else {
+                throw new Error(dados.erro || 'Falha na autenticação.');
+            }
+        } catch (err) {
+            // Se o backend com banco não estiver conectado localmente, oferece modo demonstração
+            console.warn('Backend sem conexão com Postgres ou erro:', err.message);
+            alertBox.className = 'alert-box alert-error';
+            alertBox.innerHTML = `<strong>Aviso:</strong> ${err.message}<br><small>Redirecionando em modo demonstração da interface...</small>`;
+            alertBox.style.display = 'block';
+
+            setTimeout(() => {
+                localStorage.setItem('kp_token', 'demo_token_kp_2026');
+                localStorage.setItem('kp_usuario', JSON.stringify({ nome: 'Amanda Silva', email: email, perfil: 'tutor' }));
+                window.location.href = 'principal.html';
+            }, 1800);
+        } finally {
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = 'Entrar no Sistema';
+        }
+    }
+</script>
+
+</body>
+</html>

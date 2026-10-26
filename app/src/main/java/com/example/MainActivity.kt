@@ -10,7 +10,6 @@ import com.example.ui.theme.MyApplicationTheme
 import com.example.viewmodel.PetHealthViewModel
 
 class MainActivity : ComponentActivity() {
-
     private val viewModel: PetHealthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

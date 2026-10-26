@@ -2,10 +2,12 @@ package com.example.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -135,7 +137,8 @@ fun MapScreen(
                 showHistory = uiState.showLocationHistory,
                 onCenterPet = onCenterPet,
                 onToggleHistory = onToggleHistory,
-                onToggleSimulateExit = { onToggleSimulateExit(pet.id) }
+                onToggleSimulateExit = { onToggleSimulateExit(pet.id) },
+                onUpdateSafeRadius = onUpdateSafeRadius
             )
         }
 
@@ -172,7 +175,8 @@ private fun MapCanvasCard(
     showHistory: Boolean,
     onCenterPet: () -> Unit,
     onToggleHistory: () -> Unit,
-    onToggleSimulateExit: () -> Unit
+    onToggleSimulateExit: () -> Unit,
+    onUpdateSafeRadius: (Float) -> Unit
 ) {
     // Animação de pulso do radar
     val infiniteTransition = rememberInfiniteTransition(label = "radar_pulse")
@@ -208,8 +212,22 @@ private fun MapCanvasCard(
                 .fillMaxWidth()
                 .height(340.dp)
         ) {
-            // Desenho do Mapa no Canvas
-            Canvas(modifier = Modifier.fillMaxSize()) {
+            // Desenho do Mapa no Canvas com gesto de arraste para desenhar / redimensionar o raio
+            Canvas(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .pointerInput(pet.safeRadiusMeters) {
+                        detectDragGestures { change, _ ->
+                            val touchPos = change.position
+                            val centerX = size.width / 2f
+                            val centerY = size.height / 2f
+                            val dist = kotlin.math.hypot(touchPos.x - centerX, touchPos.y - centerY)
+                            val scale = 0.75f
+                            val newRadius = (dist / scale).coerceIn(50f, 500f)
+                            onUpdateSafeRadius(newRadius)
+                        }
+                    }
+            ) {
                 val w = size.width
                 val h = size.height
                 val centerX = w / 2f
@@ -296,6 +314,13 @@ private fun MapCanvasCard(
                     center = Offset(centerX, centerY),
                     style = Stroke(width = 2.5.dp.toPx())
                 )
+
+                // Handle visual de redimensionamento na borda da cerca
+                val handleX = centerX + safeRadiusPx
+                val handleY = centerY
+                drawCircle(color = Color.White, radius = 9.dp.toPx(), center = Offset(handleX, handleY))
+                drawCircle(color = KpGreenPrimary, radius = 7.dp.toPx(), center = Offset(handleX, handleY), style = Stroke(width = 2.dp.toPx()))
+                drawCircle(color = KpGreenAccent, radius = 3.5f.dp.toPx(), center = Offset(handleX, handleY))
 
                 // Base / Casa do Tutor (Centro da Cerca)
                 drawCircle(color = Color.White, radius = 16.dp.toPx(), center = Offset(centerX, centerY))
@@ -600,6 +625,25 @@ private fun FenceRadiusControllerCard(
                     .fillMaxWidth()
                     .testTag("safe_radius_slider")
             )
+
+            // Presets Rápidos
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                listOf(50f to "50m", 100f to "100m", 150f to "150m", 300f to "300m", 500f to "500m").forEach { (meters, label) ->
+                    val isSelected = kotlin.math.abs(safeRadiusMeters - meters) < 10f
+                    FilterChip(
+                        selected = isSelected,
+                        onClick = { onRadiusChanged(meters) },
+                        label = { Text(text = label, fontSize = 10.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = KpGreenPrimary,
+                            selectedLabelColor = Color.White
+                        )
+                    )
+                }
+            }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
