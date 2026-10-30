@@ -58,16 +58,7 @@ cp .env.exemplo .env
 
 Edite o arquivo `.env` com os dados do seu PostgreSQL local:
 
-```env
-PORT=9000
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=kpsaude_db
-DB_USER=postgres
-DB_PASSWORD=sua_senha_aqui
-JWT_SECRET=kp_saude_animal_jwt_secret_token_chave_privada_2026
 ```
-
 ### 3. Criar e Inicializar o Banco de Dados (PostgreSQL)
 
 Crie o banco de dados e execute os dois scripts SQL:
